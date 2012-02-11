@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h2>{{car.slug}}</h2>
+
+  <p>Name: <a href="{{car.car.get_absolute_url}}">{{car.car.name}}</a></p>
+
+  <p>Date: {{car.date}}</p>
+
+  <p>Location: {{car.location}}</p>
+
+  <p><a href="{% url auto_maintenance_edit_oil_change car.car.slug car.slug %}">Edit</a></p>
+  <p><a href="{% url auto_maintenance_delete_oil_change car.car.slug car.slug %}">Delete</a></p>
+
+{% endblock %}

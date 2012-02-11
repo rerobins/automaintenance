@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h2>{{car.name}}</h2>
+
+  <p>Owner: {{car.owner.username}}</p>
+
+  <p>Type: {{car.car_type}}</p>
+
+  <p>Maintenance</p>
+  <ul>
+  {% for record in maintenance_list %}
+    <li><a href="{{ record.get_absolute_url }}">{{record}}</a></li>	
+  {% endfor %}
+  </ul>
+
+  <p><a href="{% url auto_maintenance_create_gas_maintenance car.slug %}">Add Gasoline Purchase</a></p>
+  <p><a href="{% url auto_maintenance_create_scheduled_maintenance car.slug %}">Add Scheduled Maintenance</a></p>
+  <p><a href="{% url auto_maintenance_create_oil_change car.slug %}">Add Oil Change</a></p>
+
+  <p><a href="{% url auto_maintenance_create_trip car.slug %}">Create Trip</a></p>
+
+  <p>Trips</p>
+  <ul>
+  {% for trip in trip_list %}
+    <li><a href="{{ trip.get_absolute_url }}">{{trip.name}}</a></li>
+  {% endfor %}
+  </ul>
+
+{% endblock %}

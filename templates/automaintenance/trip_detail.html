@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h2>{{trip.name}}</h2>
+
+  <p>Car: {{trip.car}}</p>
+
+  <ul>
+  {% for record in maintenance_list %}
+    <li><a href="{{ record.get_absolute_url }}">{{record}}</a></li>	
+  {% endfor %}
+  </ul>
+
+
+
+{% endblock %}
