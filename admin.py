@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from automaintenance.models import CarType, Trip
+from automaintenance.models import Car,CarType, Trip
 
 class CarTypeAdmin(admin.ModelAdmin):
 	pass
@@ -11,5 +11,10 @@ class TripAdmin(admin.ModelAdmin):
 	pass
 
 admin.site.register(Trip, TripAdmin)
+
+class CarAdmin(admin.ModelAdmin):
+	pass
+
+admin.site.register(Car, CarAdmin)
 
 
