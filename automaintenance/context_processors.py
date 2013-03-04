@@ -1,6 +1,6 @@
 ##
 # Automaintenance.  Django app to track automaintenance records.
-# Copyright (C) 2012 Robert Robinson 
+# Copyright (C) 2012 Robert Robinson
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -17,17 +17,22 @@
 ##
 from automaintenance.models import Car
 
+
 def car_list(request):
-	if hasattr(request, 'user'):
-		user = request.user
-		if user.is_anonymous():
-			car_list = []
-		else:
-			car_list = Car.objects.filter(owner=user)
-	else:
-		car_list = []
+    """
+        Adds a list of cars defined by the user if logged in, else returns an
+        empty list.
+    """
+    if hasattr(request, 'user'):
+        user = request.user
 
-	return {
-		'car_list': car_list,
-	}
+        if user.is_anonymous():
+            car_list = []
+        else:
+            car_list = Car.objects.filter(owner=user)
+    else:
+        car_list = []
 
+    return {
+        'car_list': car_list,
+    }

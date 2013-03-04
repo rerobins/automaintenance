@@ -1,6 +1,6 @@
 ##
 # Automaintenance.  Django app to track automaintenance records.
-# Copyright (C) 2012 Robert Robinson 
+# Copyright (C) 2012 Robert Robinson
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -16,58 +16,110 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 from django.forms import ModelForm
-from automaintenance.models import Car, GasolinePurchase, OilChange, ScheduledMaintenance, Trip
+from automaintenance.models import Car, GasolinePurchase, OilChange,
+from automaintenance.models import ScheduledMaintenance, Trip
+
 
 class CarForm(ModelForm):
-	class Meta:
-		model = Car
+    """
+        Form that will allow for the adding of new cars to the database by a
+        user.
+    """
 
-		fields = ('car_type', 
-				'name', 
-				'starting_mileage', 
-				'purchase_date' )
+    class Meta:
+        """
+            Define the meta data and the fields that are to be showed in this
+            form.
+        """
+
+        model = Car
+
+        fields = ('car_type',
+                'name',
+                'starting_mileage',
+                'purchase_date')
+
 
 class GasolinePurchaseForm(ModelForm):
-	class Meta:
-		model = GasolinePurchase
+    """
+        Form that will allow for the definition of a gasoline purchase to be
+        added to a specified car.
+    """
 
-		fields = ('date', 
-				'location', 
-				'mileage', 
-				'description', 
-				'total_cost', 
-				'tank_mileage', 
-				'price_per_gallon', 
-				'gallons', 'trip')
+    class Meta:
+        """
+            Define the meta data and the fields that are to be showed in this
+            form.
+        """
+        model = GasolinePurchase
+
+        fields = ('date',
+                'location',
+                'mileage',
+                'description',
+                'total_cost',
+                'tank_mileage',
+                'price_per_gallon',
+                'gallons', 'trip')
+
 
 class OilChangeForm(ModelForm):
-	class Meta:
-		model = OilChange
+    """
+        Form that will allow for the definition of an oil change to be added
+        to the specified car.
+    """
 
-		fields = ('date', 
-				'location', 
-				'mileage', 
-				'description', 
-				'total_cost', 
-                                'trip',
-				)
+    class Meta:
+        """
+            Define the meta data and the fields that are to be showed in this
+            form.
+        """
+        model = OilChange
+
+        fields = ('date',
+                'location',
+                'mileage',
+                'description',
+                'total_cost',
+                'trip',
+                )
+
 
 class ScheduledMaintenanceForm(ModelForm):
-	class Meta:
-		model = ScheduledMaintenance
+    """
+        Form that will allow for a scheduled maintenance or any other
+        maintenance to be added to the specified car.
+    """
 
-		fields = ('date', 
-				'location', 
-				'mileage', 
-				'description', 
-				'total_cost', 
-                                'trip',
-				)
+    class Meta:
+        """
+            Define the meta data and the fields that are to be showed in this
+            form.
+        """
+        model = ScheduledMaintenance
+
+        fields = ('date',
+                'location',
+                'mileage',
+                'description',
+                'total_cost',
+                'trip',
+                )
+
 
 class TripForm(ModelForm):
-	class Meta:
-		model = Trip
+    """
+        Form that will allow for a trip to be added in order to categorize
+        maintenance data into trips that they should be associated with.
+    """
 
-		fields = ('name', 'description', 'start', 'end')
+    class Meta:
+        """
+            Define the meta data and the fields that are to be showed in this
+            form.
+        """
+        model = Trip
+
+        fields = ('name', 'description', 'start', 'end')
 
 

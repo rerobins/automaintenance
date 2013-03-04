@@ -1,6 +1,6 @@
 ##
 # Automaintenance.  Django app to track automaintenance records.
-# Copyright (C) 2012 Robert Robinson 
+# Copyright (C) 2012 Robert Robinson
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -18,21 +18,32 @@
 
 from django.contrib import admin
 
-from automaintenance.models import Car,CarType, Trip
+from automaintenance.models import Car, CarType, Trip
+
 
 class CarTypeAdmin(admin.ModelAdmin):
-	pass
+    """
+        Admin that will provide capability to modify the car types in the
+        default django admin.
+    """
+    pass
 
-admin.site.register(CarType, CarTypeAdmin)
 
 class TripAdmin(admin.ModelAdmin):
-	pass
+    """
+        Admin that will provide capability to modify the trip objects in the
+        default django admin.
+    """
+    pass
 
-admin.site.register(Trip, TripAdmin)
 
 class CarAdmin(admin.ModelAdmin):
-	pass
+    """
+        Admin that will provide capability to modify the car objects in the
+        default django admin.
+    """
+    pass
 
+admin.site.register(Trip, TripAdmin)
+admin.site.register(CarType, CarTypeAdmin)
 admin.site.register(Car, CarAdmin)
-
-
