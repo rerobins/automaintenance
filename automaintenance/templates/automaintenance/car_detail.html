@@ -20,15 +20,15 @@
           <p>Type: {{car.car_type}}</p>
         </div>
       </div>
-    
+
       <div class="yui3-u-1-4 car_detail_commands">
-        <p><a href="{% url auto_maintenance_create_gas_maintenance car.slug %}">Add Gasoline Purchase</a></p>
-        <p><a href="{% url auto_maintenance_create_scheduled_maintenance car.slug %}">Add Scheduled Maintenance</a></p>
-        <p><a href="{% url auto_maintenance_create_oil_change car.slug %}">Add Oil Change</a></p>
+        <p><a href="{% url 'auto_maintenance_create_gas_maintenance' car.slug %}">Add Gasoline Purchase</a></p>
+        <p><a href="{% url 'auto_maintenance_create_scheduled_maintenance' car.slug %}">Add Scheduled Maintenance</a></p>
+        <p><a href="{% url 'auto_maintenance_create_oil_change' car.slug %}">Add Oil Change</a></p>
       </div>
 
       <div class="yui3-u-1-4 car_detail_trips">
-        <p><a href="{% url auto_maintenance_create_trip car.slug %}">Create Trip</a></p>
+        <p><a href="{% url 'auto_maintenance_create_trip' car.slug %}">Create Trip</a></p>
 
         <p>Trips</p>
         <ul>
@@ -40,7 +40,7 @@
 
     </div>
 
-  
+
 
     <div class="yui3-u-1">
       <h2>Maintenance</h2>

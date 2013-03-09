@@ -21,7 +21,8 @@ from django.conf.urls.defaults import *
 from automaintenance.views import CarListView, CreateCarView, DisplayCar, CreateGasolinePurchase, MaintenanceView, EditMaintenanceView, DeleteMaintenanceView, EditGasolinePurchase, DeleteGasolinePurchase, CreateMaintenanceView, CreateOilChange, EditOilChange, DeleteOilChange, GasolinePurchaseView, OilChangeView, CreateTripView, DisplayTrip
 
 urlpatterns = patterns('',
-    url(r'^$',  login_required(CarListView.as_view())),
+    url(r'^$', login_required(CarListView.as_view()),
+        name='auto_maintenance_car_list'),
 
     # Car Records
     url(r'^add_car/$', login_required(CreateCarView.as_view()), name='auto_maintenance_add_car'),

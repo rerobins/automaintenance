@@ -51,6 +51,23 @@ class CreateCarView(CreateView):
 
         return HttpResponseRedirect(self.get_success_url())
 
+    def get(self, request, *args, **kwargs):
+        """
+            Override the get so that the initial object's owner can be set to
+            the request user.
+        """
+        self.initial['owner'] = request.user
+        return super(CreateCarView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+            Override the post so that the initial object's owner can be set to
+            the request user.
+        """
+        self.user = request.user
+        self.initial['owner'] = request.user
+        return super(CreateCarView, self).post(request, *args, **kwargs)
+
 
 class DisplayCar(DetailView):
 
@@ -213,13 +230,13 @@ class CreateTripView(CreateView):
     def get(self, request, *args, **kwargs):
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None), owner=self.request.user)
-
+        self.initial['car'] = self.car
         return super(CreateView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None), owner=self.request.user)
-
+        self.initial['car'] = self.car
         return super(CreateView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):

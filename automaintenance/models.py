@@ -21,66 +21,11 @@ from django.db.models import permalink
 from django.contrib.auth.models import User
 
 
-# Create your models here.
-class CarType(models.Model):
-    CAR_CLASS_CHOICES = (
-        ('Passenger Cars', (
-            ('MICROCAR', 'Microcar'),
-            ('SCOMPACTCAR', 'Subcompact Car'),
-            ('COMPACTCAR', 'Compact Car'),
-            ('MIDCAR', 'Mid-size Car'),
-            ('FULL_CAR', 'Full-size Car'),
-        )),
-        ('Luxury Cars', (
-            ('ENTRY_LUXURY_CAR', 'Entry Luxury Car'),
-            ('MID_LUXURY_CAR', 'Mid Size Luxury Car'),
-            ('FULL_LUXURY_CAR', 'Full Size Luxury Car'),
-        )),
-        ('MPV', (
-            ('COMPACTMV', 'Compact Mini-van'),
-            ('MINIVAN', 'Mini-Van'),
-        )),
-        ('Sport Utility Vehicle', (
-            ('MINISUV', 'Mini SUV'),
-            ('COMPACTSUV', 'Compact SUV'),
-            ('MIDSUV', 'Mid-size SUV'),
-            ('FULLSUV', 'Full-size SUV'),
-        )),
-        ('Pickup', (
-            ('MINIPU', 'Mini Pickup'),
-            ('MIDPU', 'Mid-size Pickup'),
-            ('FULLPU', 'Full-size Pickup'),
-            ('FULLHDPU', 'Full-size Heavy Duty Pickup'),
-        )),
-    )
-
-    slug = models.SlugField()
-    car_manufacturer = models.CharField(max_length=50)
-    car_model = models.CharField(max_length=50)
-    car_class = models.CharField(max_length=50, choices=CAR_CLASS_CHOICES)
-    year = models.PositiveSmallIntegerField()
-    city_mpg = models.PositiveSmallIntegerField()
-    highway_mpg = models.PositiveSmallIntegerField()
-    approved = models.BooleanField()
-
-    def __str__(self):
-        return "%s %s %s" % (self.year, self.car_manufacturer, self.car_model)
-
-
-class ServiceSchedule(models.Model):
-    car_type = models.ForeignKey(CarType)
-    mileage = models.PositiveIntegerField()
-    months = models.PositiveSmallIntegerField()
-    description = models.TextField(blank=True)
-
-
 class Car(models.Model):
     slug = models.SlugField()
-    car_type = models.ForeignKey(CarType, related_name='+')
+    car_type = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
     owner = models.ForeignKey(User, related_name='+')
-    starting_mileage = models.PositiveIntegerField()
-    purchase_date = models.DateField()
 
     def __str__(self):
         return self.name
