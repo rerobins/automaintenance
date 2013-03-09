@@ -19,7 +19,7 @@ from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from automaintenance.models import Car, GasolinePurchase, OilChange
-from automaintenance.models import ScheduledMaintenance, Trip
+from automaintenance.models import Maintenance, Trip
 
 
 class CarForm(ModelForm):
@@ -105,7 +105,7 @@ class OilChangeForm(ModelForm):
                 )
 
 
-class ScheduledMaintenanceForm(ModelForm):
+class MaintenanceForm(ModelForm):
     """
         Form that will allow for a scheduled maintenance or any other
         maintenance to be added to the specified car.
@@ -116,7 +116,7 @@ class ScheduledMaintenanceForm(ModelForm):
             Define the meta data and the fields that are to be showed in this
             form.
         """
-        model = ScheduledMaintenance
+        model = Maintenance
 
         fields = ('date',
                 'location',

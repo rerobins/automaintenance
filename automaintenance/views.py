@@ -24,9 +24,9 @@ from django.template.defaultfilters import slugify
 from django.shortcuts import get_object_or_404
 
 from automaintenance.models import Car, GasolinePurchase, OilChange
-from automaintenance.models import ScheduledMaintenance, Trip
+from automaintenance.models import Maintenance, Trip
 from automaintenance.forms import CarForm, GasolinePurchaseForm, OilChangeForm
-from automaintenance.forms import ScheduledMaintenanceForm, TripForm
+from automaintenance.forms import MaintenanceForm, TripForm
 
 
 class CarListView(ListView):
@@ -89,8 +89,8 @@ class DisplayCar(DetailView):
         # Populate the maintenance list for this car
         gasoline_list = list(GasolinePurchase.objects.filter(car=self.object))
         oilchange_list = list(OilChange.objects.filter(car=self.object))
-        scheduled_maintenance_list = list(ScheduledMaintenance.objects.filter(car=self.object))
-        maintenance_list = gasoline_list + oilchange_list + scheduled_maintenance_list
+        maintenance_list = list(Maintenance.objects.filter(car=self.object))
+        maintenance_list = gasoline_list + oilchange_list + maintenance_list
         maintenance_list.sort()
         context['maintenance_list'] = maintenance_list
 
@@ -111,14 +111,14 @@ class MaintenanceView(DetailView):
         return super(DetailView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        return ScheduledMaintenance.objects.filter(car=self.car)
+        return Maintenance.objects.filter(car=self.car)
 
 
 class CreateMaintenanceView(CreateView):
 
-    model = ScheduledMaintenance
+    model = Maintenance
 
-    form_class = ScheduledMaintenanceForm
+    form_class = MaintenanceForm
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -145,8 +145,8 @@ class CreateMaintenanceView(CreateView):
 
 
 class EditMaintenanceView(UpdateView):
-    model = ScheduledMaintenance
-    form_class = ScheduledMaintenanceForm
+    model = Maintenance
+    form_class = MaintenanceForm
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -172,7 +172,7 @@ class EditMaintenanceView(UpdateView):
 
 class DeleteMaintenanceView(DeleteView):
 
-    model = ScheduledMaintenance
+    model = Maintenance
 
     def get(self, request, *args, **kwargs):
         self.car = get_object_or_404(Car,
@@ -271,9 +271,9 @@ class DisplayTrip(DetailView):
 
         gasoline_list = list(GasolinePurchase.objects.filter(trip=self.object))
         oilchange_list = list(OilChange.objects.filter(trip=self.object))
-        scheduled_maintenance_list = list(ScheduledMaintenance.objects.filter(trip=self.object))
+        maintenance_list = list(Maintenance.objects.filter(trip=self.object))
 
-        maintenance_list = gasoline_list + oilchange_list + scheduled_maintenance_list
+        maintenance_list = gasoline_list + oilchange_list + maintenance_list
 
         maintenance_list.sort()
 

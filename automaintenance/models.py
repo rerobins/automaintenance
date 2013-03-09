@@ -22,20 +22,34 @@ from django.contrib.auth.models import User
 
 
 class Car(models.Model):
+    """
+        Car model that is the parent object for all of the maintenance records.
+    """
     slug = models.SlugField()
     car_type = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
     owner = models.ForeignKey(User, related_name='+')
 
-    def __str__(self):
+    def __unicode__(self):
+        """
+            Return the name of the object as the default print out.
+        """
         return self.name
 
     @permalink
     def get_absolute_url(self):
-            return('auto_maintenance_car_detail', [str(self.slug)])
+        """
+            Override the absolute url for this object.
+        """
+        return('auto_maintenance_car_detail', [str(self.slug)])
 
 
 class Trip(models.Model):
+    """
+        Trips are a means of organizing maintenance records.  This allows for a
+        user to organize the records by a trip that the records took place
+        during.
+    """
     slug = models.SlugField()
     car = models.ForeignKey(Car, related_name='+')
     name = models.CharField(max_length=100)
@@ -44,15 +58,25 @@ class Trip(models.Model):
     end = models.DateTimeField(null=True)
 
     def __unicode__(self):
+        """
+            Return the name of the object as the default print out.
+        """
         return self.name
 
     @permalink
     def get_absolute_url(self):
+        """
+            Override the url for the trip detail view.
+        """
         return('auto_maintenance_trip_view', [str(self.car.slug),
             str(self.slug)])
 
 
-class Maintenance(models.Model):
+class MaintenanceBase(models.Model):
+    """
+        Maintenance root object that contains date, car, location, mileage, and
+        cost fields for any of the maintenance record values.
+    """
     date = models.DateTimeField(unique=True)
     car = models.ForeignKey(Car)
     trip = models.ForeignKey(Trip, null=True, blank=True)
@@ -62,10 +86,20 @@ class Maintenance(models.Model):
     total_cost = models.DecimalField(max_digits=10, decimal_places=2,
         blank=True)
 
+    class Meta:
+        abstract = True
+
     def __unicode__(self):
+        """
+            Means of printing out basic information for this record.
+        """
         return "Maintenance: %s" % self.date
 
     def __cmp__(self, other):
+        """
+            Basic comparison operator for all records that will sort based on
+            the date values.
+        """
         if self.date < other.date:
             return -1
         elif self.date > other.date:
@@ -74,35 +108,69 @@ class Maintenance(models.Model):
 
     @permalink
     def get_absolute_url(self):
+        """
+            Override the url object for this record.
+        """
         return('auto_maintenance_view_record', [str(self.car.slug),
             str(self.pk)])
 
 
-class GasolinePurchase(Maintenance):
+class GasolinePurchase(MaintenanceBase):
+    """
+        Gasoline purchase instance of a maintenance record.  Includes values
+        for amount of gasoline, and price per unit.
+    """
     tank_mileage = models.DecimalField(max_digits=6, decimal_places=3)
     price_per_unit = models.DecimalField(max_digits=6, decimal_places=3)
     fuel_amount = models.DecimalField(max_digits=7, decimal_places=3)
+    filled_tank = models.BooleanField(default=True)
 
     @permalink
     def get_absolute_url(self):
+        """
+            Absolute URL for the detailed record.
+        """
         return('auto_gasolinepurchase_view_record', [str(self.car.slug),
             str(self.pk)])
 
     def __unicode__(self):
+        """
+            Overrides the maintenance unicode string to show that this record
+            was a gasoline record.
+        """
         return "Gasoline Purchase: %s" % self.date
 
 
-class OilChange(Maintenance):
+class OilChange(MaintenanceBase):
+    """
+        Oil Change instance of a maintenance record.  Just used to tag this
+        record as the oil change.
+    """
 
     @permalink
     def get_absolute_url(self):
+        """
+            Absolute URL for the detailed record.
+        """
         return('auto_oilchange_view_record', [str(self.car.slug),
             str(self.pk)])
 
     def __unicode__(self):
+        """
+            Overrides the maintenance unicode string to show that the record
+            was an oil change record.
+        """
         return "Oil Change: %s" % self.date
 
 
-class ScheduledMaintenance(Maintenance):
+class Maintenance(MaintenanceBase):
+    """
+        Other Maintenance record.
+    """
+
     def __unicode__(self):
-        return "Scheduled Maintenance: %s" % self.date
+        """
+            Overrides the mainentance unicode string to show that the record
+            was for mainteance.
+        """
+        return "Maintenance: %s" % self.date

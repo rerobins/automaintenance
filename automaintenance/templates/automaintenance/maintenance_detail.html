@@ -10,7 +10,7 @@
 
   <p>Location: {{car.location}}</p>
 
-  <p><a href="{% url 'auto_maintenance_edit_gas_maintenance' car.car.slug car.pk %}">Edit</a></p>
-  <p><a href="{% url 'auto_maintenance_delete_gas_maintenance' car.car.slug car.pk %}">Delete</a></p>
+  <p><a href="{% url 'auto_maintenance_edit_scheduled_maintenance' car.car.slug car.pk %}">Edit</a></p>
+  <p><a href="{% url 'auto_maintenance_delete_scheduled_maintenance' car.car.slug car.pk %}">Delete</a></p>
 
 {% endblock %}
