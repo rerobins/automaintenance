@@ -48,18 +48,19 @@ class Trip(models.Model):
 
     @permalink
     def get_absolute_url(self):
-        return('auto_maintenance_trip_view', [str(self.car.slug), str(self.slug)])
+        return('auto_maintenance_trip_view', [str(self.car.slug),
+            str(self.slug)])
 
 
 class Maintenance(models.Model):
-    slug = models.SlugField()
     date = models.DateTimeField(unique=True)
     car = models.ForeignKey(Car)
     trip = models.ForeignKey(Trip, null=True, blank=True)
     location = models.CharField(max_length=100, blank=True)
     mileage = models.PositiveIntegerField()
     description = models.TextField(blank=True)
-    total_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
+    total_cost = models.DecimalField(max_digits=10, decimal_places=2,
+        blank=True)
 
     def __unicode__(self):
         return "Maintenance: %s" % self.date
@@ -73,17 +74,19 @@ class Maintenance(models.Model):
 
     @permalink
     def get_absolute_url(self):
-        return('auto_maintenance_view_record', [str(self.car.slug),str(self.slug)])
+        return('auto_maintenance_view_record', [str(self.car.slug),
+            str(self.pk)])
 
 
 class GasolinePurchase(Maintenance):
     tank_mileage = models.DecimalField(max_digits=6, decimal_places=3)
-    price_per_gallon = models.DecimalField(max_digits=6, decimal_places=3)
-    gallons = models.DecimalField(max_digits=7, decimal_places=3)
+    price_per_unit = models.DecimalField(max_digits=6, decimal_places=3)
+    fuel_amount = models.DecimalField(max_digits=7, decimal_places=3)
 
     @permalink
     def get_absolute_url(self):
-        return('auto_gasolinepurchase_view_record', [str(self.car.slug),str(self.slug)])
+        return('auto_gasolinepurchase_view_record', [str(self.car.slug),
+            str(self.pk)])
 
     def __unicode__(self):
         return "Gasoline Purchase: %s" % self.date
@@ -93,7 +96,8 @@ class OilChange(Maintenance):
 
     @permalink
     def get_absolute_url(self):
-        return('auto_oilchange_view_record', [str(self.car.slug),str(self.slug)])
+        return('auto_oilchange_view_record', [str(self.car.slug),
+            str(self.pk)])
 
     def __unicode__(self):
         return "Oil Change: %s" % self.date
@@ -102,4 +106,3 @@ class OilChange(Maintenance):
 class ScheduledMaintenance(Maintenance):
     def __unicode__(self):
         return "Scheduled Maintenance: %s" % self.date
-

@@ -30,10 +30,17 @@ from automaintenance.forms import ScheduledMaintenanceForm, TripForm
 
 
 class CarListView(ListView):
+    """
+        Return the list of cars that are owned by the user that is posting the
+        requests.
+    """
     context_object_name = "car_list"
     model = Car
 
     def get_queryset(self):
+        """
+            Trim down the query result automatically by the owner of the car.
+        """
         return Car.objects.filter(owner=self.request.user)
 
 
@@ -116,8 +123,6 @@ class CreateMaintenanceView(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.car = self.car
-        self.object.slug = slugify(self.object.date)
-
         self.object.save()
 
         return HttpResponseRedirect(self.get_success_url())
@@ -146,7 +151,6 @@ class EditMaintenanceView(UpdateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.car = self.car
-        self.object.slug = slugify(self.object.date)
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -193,7 +197,7 @@ class EditGasolinePurchase(EditMaintenanceView):
     form_class = GasolinePurchaseForm
 
 
-class DeleteGasolinePurchase(CreateMaintenanceView):
+class DeleteGasolinePurchase(DeleteMaintenanceView):
     model = GasolinePurchase
 
 

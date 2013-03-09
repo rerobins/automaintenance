@@ -79,8 +79,8 @@ class GasolinePurchaseForm(ModelForm):
                 'description',
                 'total_cost',
                 'tank_mileage',
-                'price_per_gallon',
-                'gallons', 'trip')
+                'price_per_unit',
+                'fuel_amount', 'trip')
 
 
 class OilChangeForm(ModelForm):
