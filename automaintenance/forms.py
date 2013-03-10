@@ -141,7 +141,7 @@ class TripForm(ModelForm):
         """
         cleaned_data = self.cleaned_data
 
-        ## Make sure that there isn' already a project with the name requested
+        ## Make sure that there isn't already a project with the name requested
         ## owned by that user.
         try:
             Trip.objects.get(slug=slugify(cleaned_data['name']),

@@ -36,5 +36,6 @@ class CarAdmin(admin.ModelAdmin):
     """
     pass
 
+# Add the Admin objects to the admin infrastructure.
 admin.site.register(Trip, TripAdmin)
 admin.site.register(Car, CarAdmin)

@@ -21,7 +21,6 @@ from django.views.generic import DeleteView
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from django.http import HttpResponseRedirect
 from django.template.defaultfilters import slugify
 from django.shortcuts import get_object_or_404
 
@@ -47,18 +46,20 @@ class CarListView(ListView):
 
 
 class CreateCarView(CreateView):
+    """
+        View that creates a new car.
+    """
     model = Car
-
     form_class = CarForm
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.owner = self.request.user
-        self.object.slug = slugify(self.object.name)
-
-        self.object.save()
-
-        return HttpResponseRedirect(self.get_success_url())
+        """
+            Create the slug for the car and assign the owner to the car before
+            saving it.
+        """
+        form.instance.owner = self.request.user
+        form.instance.slug = slugify(form.instance.name)
+        return super(CreateCarView, self).form_valid(form)
 
     def get(self, request, *args, **kwargs):
         """
@@ -73,19 +74,32 @@ class CreateCarView(CreateView):
             Override the post so that the initial object's owner can be set to
             the request user.
         """
-        self.user = request.user
         self.initial['owner'] = request.user
         return super(CreateCarView, self).post(request, *args, **kwargs)
 
 
 class DisplayCar(DetailView):
-
+    """
+        The view that is responsible for showing off all of the details of the
+        car, including the records that make up the maintenance values of the
+        car.
+    """
     context_object_name = "car"
 
     def get_queryset(self):
+        """
+            Override the queryset used to look up the object so that it only
+            returns the cars that are owned by the requests user.
+        """
         return Car.objects.filter(owner=self.request.user)
 
     def get_context_data(self, **kwargs):
+        """
+            Adding some contextual data to the view including:
+                maintenance list
+                the last oil change
+                the last gasoline purchase
+        """
         context = super(DetailView, self).get_context_data(**kwargs)
 
         # Populate the maintenance list for this car
@@ -119,10 +133,17 @@ class DisplayCar(DetailView):
 
 
 class MaintenanceView(DetailView):
-
+    """
+        Base view for the maintenance record display.
+    """
     context_object_name = "car"
+    model = Maintenance
 
     def get(self, request, *args, **kwargs):
+        """
+            Adds a class variable pointing the car that the maintenance record
+            is supposed to be related to.
+        """
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None),
             owner=self.request.user)
@@ -130,20 +151,29 @@ class MaintenanceView(DetailView):
         return super(DetailView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        return Maintenance.objects.filter(car=self.car)
+        """
+            Queryset override that makes sure that the record that is searched
+            for belongs to the car defined in the url.
+        """
+        return self.model.objects.filter(car=self.car)
 
 
 class CreateMaintenanceView(CreateView):
-
+    """
+        View that will allow for the creation of new maintenance records.  This
+        class can be used as a base class for the creation of all maintenance
+        records.
+    """
     model = Maintenance
     form_class = MaintenanceForm
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.car = self.car
-        self.object.save()
-
-        return HttpResponseRedirect(self.get_success_url())
+        """
+            Make sure that the car value is stored in the model object before
+            it is saved.
+        """
+        form.instance.car = self.car
+        return super(CreateMaintenanceView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(CreateView, self).get_context_data(**kwargs)
@@ -157,6 +187,9 @@ class CreateMaintenanceView(CreateView):
         return self.car.get_absolute_url()
 
     def get(self, request, *args, **kwargs):
+        """
+            Override get to add a car field to the class object.
+        """
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None),
             owner=request.user)
@@ -164,6 +197,9 @@ class CreateMaintenanceView(CreateView):
         return super(CreateView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        """
+            Override the post field to add a car field to the class object.
+        """
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None),
             owner=request.user)
@@ -171,19 +207,34 @@ class CreateMaintenanceView(CreateView):
 
 
 class EditMaintenanceView(UpdateView):
+    """
+        Override the update view to edit maintenance items on a specific car.
+    """
     model = Maintenance
     form_class = MaintenanceForm
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.car = self.car
-        self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
+        """
+            Override the form_valid method to make sure that the car that the
+            record is defined for is stored in the object.
+        """
+        form.instance.car = self.car
+        return super(EditMaintenanceView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
+        """
+            Add the command type to the maintenance view for display.
+        """
         context = super(UpdateView, self).get_context_data(**kwargs)
         context['command'] = 'Update'
         return context
+
+    def get_queryset(self):
+        """
+            When looking up the object to edit, make sure that the records are
+            only found for the car that is defined in the url.
+        """
+        return self.model.objects.filter(car=self.car)
 
     def get_success_url(self):
         """
@@ -192,12 +243,18 @@ class EditMaintenanceView(UpdateView):
         return self.car.get_absolute_url()
 
     def get(self, request, *args, **kwargs):
+        """
+            Override get to add a car field to the class object.
+        """
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None),
             owner=request.user)
         return super(UpdateView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        """
+            Override the post field to add a car field to the class object.
+        """
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None),
             owner=request.user)
@@ -205,10 +262,16 @@ class EditMaintenanceView(UpdateView):
 
 
 class DeleteMaintenanceView(DeleteView):
+    """
+        Override the delete view to delete maintenance objects.
+    """
 
     model = Maintenance
 
     def get(self, request, *args, **kwargs):
+        """
+            Override get to add a car field to the class object.
+        """
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None),
             owner=request.user)
@@ -216,11 +279,20 @@ class DeleteMaintenanceView(DeleteView):
         return super(DeleteView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        """
+            Override the post field to add a car field to the class object.
+        """
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None),
             owner=request.user)
-        self.success_url = self.car.get_absolute_url()
         return super(DeleteView, self).post(request, *args, **kwargs)
+
+    def get_queryset(self):
+        """
+            When looking up the object to edit, make sure that the records are
+            only found for the car that is defined in the url.
+        """
+        return self.model.objects.filter(car=self.car)
 
     def get_success_url(self):
         """
@@ -230,85 +302,126 @@ class DeleteMaintenanceView(DeleteView):
 
 
 class CreateGasolinePurchase(CreateMaintenanceView):
+    """
+        Override the CreateMaintenanceView to create gasoline purchases.
+    """
     model = GasolinePurchase
     form_class = GasolinePurchaseForm
 
 
 class EditGasolinePurchase(EditMaintenanceView):
+    """
+        Override the EditMaintenanceView to edit gasoline purchases.
+    """
     model = GasolinePurchase
     form_class = GasolinePurchaseForm
 
 
 class DeleteGasolinePurchase(DeleteMaintenanceView):
+    """
+        Override the DeleteMaintenanceView to delete gasoline purchases.
+    """
     model = GasolinePurchase
 
 
 class CreateOilChange(CreateMaintenanceView):
+    """
+        Override the CreateMaintenanceView to create oil changes.
+    """
     model = OilChange
     form_class = OilChangeForm
 
 
 class EditOilChange(EditMaintenanceView):
+    """
+        Override the EditMaintenanceView to edit oil changes.
+    """
     model = OilChange
     form_class = OilChangeForm
 
 
 class DeleteOilChange(DeleteMaintenanceView):
+    """
+        Override the DeleteMaintenanceView to delete oil changes.
+    """
     model = OilChange
 
 
 class OilChangeView(MaintenanceView):
-    def get_queryset(self):
-        return OilChange.objects.filter(car=self.car)
+    """
+        Override the MaintenanceView to show oil changes.
+    """
+    model = OilChange
 
 
 class GasolinePurchaseView(MaintenanceView):
-
-    def get_queryset(self):
-        return GasolinePurchase.objects.filter(car=self.car)
+    """
+        Override the MaintenanceView to show gasoline purchases.
+    """
+    model = GasolinePurchase
 
 
 class CreateTripView(CreateView):
+    """
+        Override CreateView to create new trip objects.
+    """
     model = Trip
-
     form_class = TripForm
 
     def get(self, request, *args, **kwargs):
+        """
+            Override get to add a car field to the class object.
+        """
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None), owner=self.request.user)
         self.initial['car'] = self.car
-        return super(CreateView, self).get(request, *args, **kwargs)
+        return super(CreateTripView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        """
+            Override the post field to add a car field to the class object.
+        """
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None), owner=self.request.user)
         self.initial['car'] = self.car
-        return super(CreateView, self).post(request, *args, **kwargs)
+        return super(CreateTripView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.car = self.car
-        self.object.slug = slugify(self.object.name)
-
-        self.object.save()
-
-        return HttpResponseRedirect(self.get_success_url())
+        """
+            Override the form_valid method to make sure that the car that the
+            record is defined for is stored in the object.
+        """
+        form.instance.car = self.car
+        return super(CreateTripView, self).form_valid(form)
 
 
 class DisplayTrip(DetailView):
-
+    """
+        Override DetailView to show records associated with a trip object.
+    """
     context_object_name = "trip"
 
     def get_queryset(self):
+        """
+            When looking up the object to edit, make sure that the trips are
+            only found for the car that is defined in the url.
+        """
         return Trip.objects.filter(car=self.car)
 
     def get(self, request, *args, **kwargs):
+        """
+            Override get to add a car field to the class object.
+        """
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None), owner=self.request.user)
 
         return super(DetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        """
+            Adding some contextual data to the view including:
+                maintenance list
+        """
         context = super(DetailView, self).get_context_data(**kwargs)
 
         gasoline_list = list(GasolinePurchase.objects.filter(trip=self.object))
