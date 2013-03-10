@@ -16,8 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 from django.forms import ModelForm
-from automaintenance.models import Car, GasolinePurchase, OilChange,
-from automaintenance.models import ScheduledMaintenance, Trip
+from django.core.exceptions import ValidationError
+from django.template.defaultfilters import slugify
+from automaintenance.models import Car, GasolinePurchase, OilChange
+from automaintenance.models import Maintenance, Trip
 
 
 class CarForm(ModelForm):
@@ -25,6 +27,26 @@ class CarForm(ModelForm):
         Form that will allow for the adding of new cars to the database by a
         user.
     """
+
+    def clean(self):
+        """
+            Overriden to validate the model before it is saved to the database,
+            want to make sure that there are not two projects owned by the same
+            user that have the same name.
+        """
+        cleaned_data = self.cleaned_data
+
+        ## Make sure that there isn' already a project with the name requested
+        ## owned by that user.
+        try:
+            Car.objects.get(slug=slugify(cleaned_data['name']),
+                owner=self.initial['owner'])
+        except:
+            pass
+        else:
+            raise ValidationError("Car with this name already exists")
+
+        return cleaned_data
 
     class Meta:
         """
@@ -35,9 +57,7 @@ class CarForm(ModelForm):
         model = Car
 
         fields = ('car_type',
-                'name',
-                'starting_mileage',
-                'purchase_date')
+                'name',)
 
 
 class GasolinePurchaseForm(ModelForm):
@@ -59,8 +79,8 @@ class GasolinePurchaseForm(ModelForm):
                 'description',
                 'total_cost',
                 'tank_mileage',
-                'price_per_gallon',
-                'gallons', 'trip')
+                'price_per_unit',
+                'fuel_amount', 'trip')
 
 
 class OilChangeForm(ModelForm):
@@ -85,7 +105,7 @@ class OilChangeForm(ModelForm):
                 )
 
 
-class ScheduledMaintenanceForm(ModelForm):
+class MaintenanceForm(ModelForm):
     """
         Form that will allow for a scheduled maintenance or any other
         maintenance to be added to the specified car.
@@ -96,7 +116,7 @@ class ScheduledMaintenanceForm(ModelForm):
             Define the meta data and the fields that are to be showed in this
             form.
         """
-        model = ScheduledMaintenance
+        model = Maintenance
 
         fields = ('date',
                 'location',
@@ -113,6 +133,26 @@ class TripForm(ModelForm):
         maintenance data into trips that they should be associated with.
     """
 
+    def clean(self):
+        """
+            Overriden to validate the model before it is saved to the database,
+            want to make sure that there are not two projects owned by the same
+            user that have the same name.
+        """
+        cleaned_data = self.cleaned_data
+
+        ## Make sure that there isn' already a project with the name requested
+        ## owned by that user.
+        try:
+            Trip.objects.get(slug=slugify(cleaned_data['name']),
+                car=self.initial['car'])
+        except:
+            pass
+        else:
+            raise ValidationError("Car with this name already exists")
+
+        return cleaned_data
+
     class Meta:
         """
             Define the meta data and the fields that are to be showed in this
@@ -121,5 +161,3 @@ class TripForm(ModelForm):
         model = Trip
 
         fields = ('name', 'description', 'start', 'end')
-
-

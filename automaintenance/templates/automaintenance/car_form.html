@@ -4,9 +4,9 @@
 
   <style type="text/css">
     label {
-      float: left;  
-      width: 10em;  
-      margin-right: 1em; 
+      float: left;
+      width: 10em;
+      margin-right: 1em;
     }
   </style>
 
@@ -16,7 +16,7 @@
 
   <h2>Add Car</h2>
 
-  <form method="POST" action="{% url auto_maintenance_add_car %}">
+  <form method="POST" action="{% url 'auto_maintenance_add_car' %}">
     {% csrf_token %}
     {{ form.as_p }}
 

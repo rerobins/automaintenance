@@ -18,15 +18,7 @@
 
 from django.contrib import admin
 
-from automaintenance.models import Car, CarType, Trip
-
-
-class CarTypeAdmin(admin.ModelAdmin):
-    """
-        Admin that will provide capability to modify the car types in the
-        default django admin.
-    """
-    pass
+from automaintenance.models import Car, Trip
 
 
 class TripAdmin(admin.ModelAdmin):
@@ -45,5 +37,4 @@ class CarAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(Trip, TripAdmin)
-admin.site.register(CarType, CarTypeAdmin)
 admin.site.register(Car, CarAdmin)

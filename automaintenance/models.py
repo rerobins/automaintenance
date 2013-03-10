@@ -21,76 +21,38 @@ from django.db.models import permalink
 from django.contrib.auth.models import User
 
 
-# Create your models here.
-class CarType(models.Model):
-    CAR_CLASS_CHOICES = (
-        ('Passenger Cars', (
-            ('MICROCAR', 'Microcar'),
-            ('SCOMPACTCAR', 'Subcompact Car'),
-            ('COMPACTCAR', 'Compact Car'),
-            ('MIDCAR', 'Mid-size Car'),
-            ('FULL_CAR', 'Full-size Car'),
-        )),
-        ('Luxury Cars', (
-            ('ENTRY_LUXURY_CAR', 'Entry Luxury Car'),
-            ('MID_LUXURY_CAR', 'Mid Size Luxury Car'),
-            ('FULL_LUXURY_CAR', 'Full Size Luxury Car'),
-        )),
-        ('MPV', (
-            ('COMPACTMV', 'Compact Mini-van'),
-            ('MINIVAN', 'Mini-Van'),
-        )),
-        ('Sport Utility Vehicle', (
-            ('MINISUV', 'Mini SUV'),
-            ('COMPACTSUV', 'Compact SUV'),
-            ('MIDSUV', 'Mid-size SUV'),
-            ('FULLSUV', 'Full-size SUV'),
-        )),
-        ('Pickup', (
-            ('MINIPU', 'Mini Pickup'),
-            ('MIDPU', 'Mid-size Pickup'),
-            ('FULLPU', 'Full-size Pickup'),
-            ('FULLHDPU', 'Full-size Heavy Duty Pickup'),
-        )),
-    )
-
-    slug = models.SlugField()
-    car_manufacturer = models.CharField(max_length=50)
-    car_model = models.CharField(max_length=50)
-    car_class = models.CharField(max_length=50, choices=CAR_CLASS_CHOICES)
-    year = models.PositiveSmallIntegerField()
-    city_mpg = models.PositiveSmallIntegerField()
-    highway_mpg = models.PositiveSmallIntegerField()
-    approved = models.BooleanField()
-
-    def __str__(self):
-        return "%s %s %s" % (self.year, self.car_manufacturer, self.car_model)
-
-
-class ServiceSchedule(models.Model):
-    car_type = models.ForeignKey(CarType)
-    mileage = models.PositiveIntegerField()
-    months = models.PositiveSmallIntegerField()
-    description = models.TextField(blank=True)
-
-
 class Car(models.Model):
+    """
+        Car model that is the parent object for all of the maintenance records.
+    """
     slug = models.SlugField()
-    car_type = models.ForeignKey(CarType, related_name='+')
+    car_type = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
     owner = models.ForeignKey(User, related_name='+')
-    starting_mileage = models.PositiveIntegerField()
-    purchase_date = models.DateField()
 
-    def __str__(self):
+    class Meta:
+        ordering = ['name']
+
+    def __unicode__(self):
+        """
+            Return the name of the object as the default print out.
+        """
         return self.name
 
     @permalink
     def get_absolute_url(self):
-            return('auto_maintenance_car_detail', [str(self.slug)])
+        """
+            Override the absolute url for this object.
+        """
+        return('auto_maintenance_car_detail', [str(self.slug)])
 
 
 class Trip(models.Model):
+    """
+        Trips are a means of organizing maintenance records.  This allows for a
+        user to organize the records by a trip that the records took place
+        during.
+    """
     slug = models.SlugField()
     car = models.ForeignKey(Car, related_name='+')
     name = models.CharField(max_length=100)
@@ -98,28 +60,58 @@ class Trip(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField(null=True)
 
+    class Meta:
+        ordering = ['name']
+
     def __unicode__(self):
+        """
+            Return the name of the object as the default print out.
+        """
         return self.name
 
     @permalink
     def get_absolute_url(self):
-        return('auto_maintenance_trip_view', [str(self.car.slug), str(self.slug)])
+        """
+            Override the url for the trip detail view.
+        """
+        return('auto_maintenance_trip_view', [str(self.car.slug),
+            str(self.slug)])
 
 
-class Maintenance(models.Model):
-    slug = models.SlugField()
+class MaintenanceBase(models.Model):
+    """
+        Maintenance root object that contains date, car, location, mileage, and
+        cost fields for any of the maintenance record values.
+    """
     date = models.DateTimeField(unique=True)
     car = models.ForeignKey(Car)
     trip = models.ForeignKey(Trip, null=True, blank=True)
     location = models.CharField(max_length=100, blank=True)
     mileage = models.PositiveIntegerField()
     description = models.TextField(blank=True)
-    total_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
+    total_cost = models.DecimalField(max_digits=10, decimal_places=2,
+        blank=True)
+
+    class Meta:
+        """
+            Mark the model as being an abstract model for the rest of the
+            maintenance type objects.
+        """
+        abstract = True
+        ordering = ['date']
+        get_latest_by = 'date'
 
     def __unicode__(self):
+        """
+            Means of printing out basic information for this record.
+        """
         return "Maintenance: %s" % self.date
 
     def __cmp__(self, other):
+        """
+            Basic comparison operator for all records that will sort based on
+            the date values.
+        """
         if self.date < other.date:
             return -1
         elif self.date > other.date:
@@ -128,33 +120,69 @@ class Maintenance(models.Model):
 
     @permalink
     def get_absolute_url(self):
-        return('auto_maintenance_view_record', [str(self.car.slug),str(self.slug)])
+        """
+            Override the url object for this record.
+        """
+        return('auto_maintenance_view_record', [str(self.car.slug),
+            str(self.pk)])
 
 
-class GasolinePurchase(Maintenance):
+class GasolinePurchase(MaintenanceBase):
+    """
+        Gasoline purchase instance of a maintenance record.  Includes values
+        for amount of gasoline, and price per unit.
+    """
     tank_mileage = models.DecimalField(max_digits=6, decimal_places=3)
-    price_per_gallon = models.DecimalField(max_digits=6, decimal_places=3)
-    gallons = models.DecimalField(max_digits=7, decimal_places=3)
+    price_per_unit = models.DecimalField(max_digits=6, decimal_places=3)
+    fuel_amount = models.DecimalField(max_digits=7, decimal_places=3)
+    filled_tank = models.BooleanField(default=True)
 
     @permalink
     def get_absolute_url(self):
-        return('auto_gasolinepurchase_view_record', [str(self.car.slug),str(self.slug)])
+        """
+            Absolute URL for the detailed record.
+        """
+        return('auto_gasolinepurchase_view_record', [str(self.car.slug),
+            str(self.pk)])
 
     def __unicode__(self):
+        """
+            Overrides the maintenance unicode string to show that this record
+            was a gasoline record.
+        """
         return "Gasoline Purchase: %s" % self.date
 
 
-class OilChange(Maintenance):
+class OilChange(MaintenanceBase):
+    """
+        Oil Change instance of a maintenance record.  Just used to tag this
+        record as the oil change.
+    """
 
     @permalink
     def get_absolute_url(self):
-        return('auto_oilchange_view_record', [str(self.car.slug),str(self.slug)])
+        """
+            Absolute URL for the detailed record.
+        """
+        return('auto_oilchange_view_record', [str(self.car.slug),
+            str(self.pk)])
 
     def __unicode__(self):
+        """
+            Overrides the maintenance unicode string to show that the record
+            was an oil change record.
+        """
         return "Oil Change: %s" % self.date
 
 
-class ScheduledMaintenance(Maintenance):
-    def __unicode__(self):
-        return "Scheduled Maintenance: %s" % self.date
+class Maintenance(MaintenanceBase):
+    """
+        Other Maintenance record.
+    """
 
+    def __unicode__(self):
+        """
+            Overrides the mainentance unicode string to show that the record
+            was for mainteance.
+        """
+        return "Maintenance: %s" % self.date
