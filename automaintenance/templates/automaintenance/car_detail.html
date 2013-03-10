@@ -18,6 +18,8 @@
         <div class="car_detail_details">
           <p>Owner: {{car.owner.username}}</p>
           <p>Type: {{car.car_type}}</p>
+          <p>Last Oil Change: {% if has_last_oil_change %}{{last_oil_change.date}}{%else %}Unknown{% endif %}</p>
+          <p>Last Fill Up: {% if has_last_gas_purchase %}{{last_gas_purchase.date}}{%else %}Unknown{% endif %}</p>
         </div>
       </div>
 

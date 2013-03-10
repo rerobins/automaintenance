@@ -19,6 +19,8 @@
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.views.generic import DeleteView
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from django.http import HttpResponseRedirect
 from django.template.defaultfilters import slugify
 from django.shortcuts import get_object_or_404
@@ -93,6 +95,22 @@ class DisplayCar(DetailView):
         maintenance_list = gasoline_list + oilchange_list + maintenance_list
         maintenance_list.sort()
         context['maintenance_list'] = maintenance_list
+
+        # Populate the last oil change for this car
+        try:
+            context['has_last_oil_change'] = True
+            context['last_oil_change'] = OilChange.objects.filter(
+                    car=self.object).latest()
+        except ObjectDoesNotExist:
+            context['has_last_oil_change'] = False
+
+        # Populate the last fill up for this car
+        try:
+            context['has_last_gas_purchase'] = True
+            context['last_gas_purchase'] = GasolinePurchase.objects.filter(
+                    car=self.object).latest()
+        except ObjectDoesNotExist:
+            context['has_last_gas_purchase'] = False
 
         # Populate the tirp list for this car
         context['trip_list'] = Trip.objects.filter(car=self.object)
@@ -235,7 +253,7 @@ class EditOilChange(EditMaintenanceView):
     form_class = OilChangeForm
 
 
-class DeleteOilChange(CreateMaintenanceView):
+class DeleteOilChange(DeleteMaintenanceView):
     model = OilChange
 
 
