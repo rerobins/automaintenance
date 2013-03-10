@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 from django.contrib.auth.decorators import login_required
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 from automaintenance.views import CarListView, CreateCarView, DisplayCar
 from automaintenance.views import CreateGasolinePurchase, MaintenanceView
