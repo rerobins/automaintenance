@@ -30,6 +30,9 @@ class Car(models.Model):
     name = models.CharField(max_length=50)
     owner = models.ForeignKey(User, related_name='+')
 
+    class Meta:
+        ordering = ['name']
+
     def __unicode__(self):
         """
             Return the name of the object as the default print out.
@@ -56,6 +59,9 @@ class Trip(models.Model):
     description = models.TextField()
     start = models.DateTimeField()
     end = models.DateTimeField(null=True)
+
+    class Meta:
+        ordering = ['name']
 
     def __unicode__(self):
         """
@@ -87,7 +93,13 @@ class MaintenanceBase(models.Model):
         blank=True)
 
     class Meta:
+        """
+            Mark the model as being an abstract model for the rest of the
+            maintenance type objects.
+        """
         abstract = True
+        ordering = ['date']
+        get_latest_by = 'date'
 
     def __unicode__(self):
         """
