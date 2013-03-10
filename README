@@ -1,4 +1,4 @@
-Django application that can be used to track car maintenance schedules.
+Django 1.5 application that can be used to track car maintenance schedules.
 
 License 
 ==============================================================================
@@ -16,3 +16,20 @@ License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ==============================================================================
+
+Quick start
+-----------
+
+1. Add "automaintenance" to your INSTALLED_APPS setting like this::
+
+      INSTALLED_APPS = (
+          ...
+          'automaintenance',
+      )
+
+2. Include the polls URLconf in your project urls.py like this::
+
+      url(r'^automaintenance/', include('automaintenance.urls')),
+
+3. Run `python manage.py syncdb` to create the automaintenance models.
+
