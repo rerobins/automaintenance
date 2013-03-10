@@ -106,7 +106,8 @@ class MaintenanceView(DetailView):
 
     def get(self, request, *args, **kwargs):
         self.car = get_object_or_404(Car,
-            slug=self.kwargs.get('car_slug', None), owner=self.request.user)
+            slug=self.kwargs.get('car_slug', None),
+            owner=self.request.user)
 
         return super(DetailView, self).get(request, *args, **kwargs)
 
@@ -117,7 +118,6 @@ class MaintenanceView(DetailView):
 class CreateMaintenanceView(CreateView):
 
     model = Maintenance
-
     form_class = MaintenanceForm
 
     def form_valid(self, form):
@@ -132,15 +132,23 @@ class CreateMaintenanceView(CreateView):
         context['command'] = 'Add'
         return context
 
+    def get_success_url(self):
+        """
+            Override the success url to go back to the car's detail page.
+        """
+        return self.car.get_absolute_url()
+
     def get(self, request, *args, **kwargs):
         self.car = get_object_or_404(Car,
-            slug=self.kwargs.get('car_slug', None))
+            slug=self.kwargs.get('car_slug', None),
+            owner=request.user)
 
         return super(CreateView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.car = get_object_or_404(Car,
-            slug=self.kwargs.get('car_slug', None))
+            slug=self.kwargs.get('car_slug', None),
+            owner=request.user)
         return super(CreateView, self).post(request, *args, **kwargs)
 
 
@@ -159,14 +167,22 @@ class EditMaintenanceView(UpdateView):
         context['command'] = 'Update'
         return context
 
+    def get_success_url(self):
+        """
+            Override the success url to go back to the car's detail page.
+        """
+        return self.car.get_absolute_url()
+
     def get(self, request, *args, **kwargs):
         self.car = get_object_or_404(Car,
-            slug=self.kwargs.get('car_slug', None))
+            slug=self.kwargs.get('car_slug', None),
+            owner=request.user)
         return super(UpdateView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.car = get_object_or_404(Car,
-            slug=self.kwargs.get('car_slug', None))
+            slug=self.kwargs.get('car_slug', None),
+            owner=request.user)
         return super(UpdateView, self).post(request, *args, **kwargs)
 
 
@@ -176,15 +192,23 @@ class DeleteMaintenanceView(DeleteView):
 
     def get(self, request, *args, **kwargs):
         self.car = get_object_or_404(Car,
-            slug=self.kwargs.get('car_slug', None))
+            slug=self.kwargs.get('car_slug', None),
+            owner=request.user)
 
         return super(DeleteView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.car = get_object_or_404(Car,
-            slug=self.kwargs.get('car_slug', None))
+            slug=self.kwargs.get('car_slug', None),
+            owner=request.user)
         self.success_url = self.car.get_absolute_url()
         return super(DeleteView, self).post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        """
+            Override the success url to go back to the car's detail page.
+        """
+        return self.car.get_absolute_url()
 
 
 class CreateGasolinePurchase(CreateMaintenanceView):
