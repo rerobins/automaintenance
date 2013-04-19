@@ -61,6 +61,9 @@ class Trip(models.Model):
     end = models.DateTimeField(null=True)
 
     class Meta:
+        """
+            Meta class that overrides the models basic attributes.
+        """
         ordering = ['name']
 
     def __unicode__(self):
