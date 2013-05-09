@@ -35,7 +35,7 @@
         <p>Trips</p>
         <ul>
           {% for trip in trip_list %}
-            <li><a href="{{ trip.get_absolute_url }}">{{trip.name}}</a></li>
+            <li><a href="{{ trip.get_absolute_url }}">{{trip}}</a></li>
           {% endfor %}
         </ul>
       </div>

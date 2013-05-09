@@ -19,6 +19,7 @@ from django.db import models
 
 from django.db.models import permalink
 from django.contrib.auth.models import User
+from django.template.defaultfilters import date
 
 
 class Car(models.Model):
@@ -56,7 +57,7 @@ class Trip(models.Model):
     slug = models.SlugField()
     car = models.ForeignKey(Car, related_name='+')
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True)
 
@@ -70,7 +71,7 @@ class Trip(models.Model):
         """
             Return the name of the object as the default print out.
         """
-        return self.name
+        return "%s - %s" % (date(self.start, "Y-m-d"), self.name)
 
     @permalink
     def get_absolute_url(self):

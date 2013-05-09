@@ -392,6 +392,9 @@ class CreateTripView(CreateView):
             record is defined for is stored in the object.
         """
         form.instance.car = self.car
+        string = "%02d%02d%02d%s" % (form.instance.start.year, form.instance.start.month, form.instance.start.day,
+                               form.instance.name)
+        form.instance.slug = slugify(string)
         return super(CreateTripView, self).form_valid(form)
 
 
