@@ -22,11 +22,29 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import date
 from django.conf import settings
 import pytz
+from decimal import Decimal
 
 
 # Time zone choices for all of the record date time values.
 timezone_choices = [(time_zone, time_zone)
     for time_zone in pytz.common_timezones]
+
+MILEAGE_UNITS_MILES = 'mi'
+MILEAGE_UNITS_KILOMETERS = 'km'    
+    
+MILEAGE_UNITS = (
+                 (MILEAGE_UNITS_MILES, 'Miles'),
+                 (MILEAGE_UNITS_KILOMETERS, 'Kilometers')
+                )
+
+FUEL_UNITS_GALLONS = 'gal'
+FUEL_UNITS_LITERS = 'l'
+
+FUEL_UNITS = (
+                (FUEL_UNITS_GALLONS, 'Gallons'),
+                (FUEL_UNITS_LITERS, 'Liters')
+             )
+
 
 class Car(models.Model):
     """
@@ -52,6 +70,21 @@ class Car(models.Model):
             Override the absolute url for this object.
         """
         return('auto_maintenance_car_detail', [str(self.slug)])
+
+
+class CarProfile(models.Model):
+    """
+        Additional information about cars.
+    """
+    car = models.ForeignKey(Car, related_name='+')
+    mileage_units = models.CharField(max_length=2, choices=MILEAGE_UNITS, 
+                                     default=MILEAGE_UNITS_MILES)
+    fuel_units = models.CharField(max_length=3, choices=FUEL_UNITS,
+                                  default=FUEL_UNITS_GALLONS)
+    city_rates = models.DecimalField(max_digits=5, decimal_places=2,
+                                    default=Decimal(0.0))
+    highway_rates = models.DecimalField(max_digits=5, decimal_places=2,
+                                        default=Decimal(0.0))
 
 
 class Trip(models.Model):
