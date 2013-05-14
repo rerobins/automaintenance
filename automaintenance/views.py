@@ -29,6 +29,8 @@ from automaintenance.models import Maintenance, Trip
 from automaintenance.forms import CarForm, GasolinePurchaseForm, OilChangeForm
 from automaintenance.forms import MaintenanceForm, TripForm
 
+from decimal import *
+
 
 class CarListView(ListView):
     """
@@ -436,5 +438,16 @@ class DisplayTrip(DetailView):
         maintenance_list.sort()
 
         context['maintenance_list'] = maintenance_list
+        
+        total_price = Decimal(0.0)
+        total_mileage = 0
+        
+        for maintenance in maintenance_list:
+            total_price += maintenance.total_cost
+            if hasattr(maintenance, 'tank_mileage'):
+                total_mileage += maintenance.tank_mileage
+                
+        context['total_price'] = total_price
+        context['total_mileage'] = total_mileage
 
         return context

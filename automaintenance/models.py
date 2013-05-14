@@ -20,7 +20,13 @@ from django.db import models
 from django.db.models import permalink
 from django.contrib.auth.models import User
 from django.template.defaultfilters import date
+from django.conf import settings
+import pytz
 
+
+# Time zone choices for all of the record date time values.
+timezone_choices = [(time_zone, time_zone)
+    for time_zone in pytz.common_timezones]
 
 class Car(models.Model):
     """
@@ -88,6 +94,8 @@ class MaintenanceBase(models.Model):
         cost fields for any of the maintenance record values.
     """
     date = models.DateTimeField(unique=True)
+    date_timezone = models.CharField(max_length=50, choices=timezone_choices, 
+                                     default=settings.TIME_ZONE)
     car = models.ForeignKey(Car)
     trip = models.ForeignKey(Trip, null=True, blank=True)
     location = models.CharField(max_length=100, blank=True)
