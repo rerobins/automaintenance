@@ -1,59 +1,84 @@
 {% extends "base.html" %}
 
-{% block extrahead %}
-  <style type="text/css">
-    .car_detail_details {
-      margin-left: 10px;
-    }
-  </style>
-{% endblock %}
-
 {% block content %}
 
-    <div class="car_detail_header">
-      <h1>{{car.name}}</h1>
-    </div>
-    <div class="yui3-g">
-      <div class="yui3-u-1-2">
-        <div class="car_detail_details">
-          <p>Owner: {{car.owner.username}}</p>
-          <p>Type: {{car.car_type}}</p>
-          <p>Last Oil Change: {% if has_last_oil_change %}{{last_oil_change.date}}{%else %}Unknown{% endif %}</p>
-          <p>Last Fill Up: {% if has_last_gas_purchase %}{{last_gas_purchase.date}}{%else %}Unknown{% endif %}</p>
-        </div>
-      </div>
-
-      <div class="yui3-u-1-4 car_detail_commands">
-        <p><a href="{% url 'auto_maintenance_create_gas_maintenance' car.slug %}">Add Gasoline Purchase</a></p>
-        <p><a href="{% url 'auto_maintenance_create_scheduled_maintenance' car.slug %}">Add Scheduled Maintenance</a></p>
-        <p><a href="{% url 'auto_maintenance_create_oil_change' car.slug %}">Add Oil Change</a></p>
-      </div>
-
-      <div class="yui3-u-1-4 car_detail_trips">
-        <p><a href="{% url 'auto_maintenance_create_trip' car.slug %}">Create Trip</a></p>
-
-        <p>Trips</p>
-        <ul>
-          {% for trip in trip_list %}
-            <li><a href="{{ trip.get_absolute_url }}">{{trip}}</a></li>
-          {% endfor %}
-        </ul>
-      </div>
-
-    </div>
+<div class="page-header">
+	<h1>{{car.name}} <small>{{car.car_type}}</small></h1>
+</div>
 
 
+<div class="row">
+	<div class="span6">
+		<dl class="dl-horizontal">
+			<dt>
+				Last Oil Change:
+			</dt>
+			<dd>
+				{% if has_last_oil_change %}{{last_oil_change.date}}{%else %}Unknown{% endif %}
+			</dd>
+			<dt>
+				Last Fill Up:
+			</dt>
+			<dd>
+				{% if has_last_gas_purchase %}{{last_gas_purchase.date}}{%else %}Unknown{% endif %}
+			</dd>
+		</dl>
+	</div>
 
-    <div class="yui3-u-1">
-      <h2>Maintenance</h2>
-      <ul>
-      {% for record in maintenance_list %}
-        <li><a href="{{ record.get_absolute_url }}">{{record}}</a></li>	
-      {% endfor %}
-      </ul>
-    </div>
+	<div class="span5">
 
+		<ul class="nav nav-tabs" id="myTab">
+			<li class="active">
+				<a href="#commands">Commands</a>
+			</li>
+			<li>
+				<a href="#trips">Trips</a>
+			</li>
+		</ul>
 
-  </div>
+		<div class="tab-content">
+			<div class="tab-pane active" id="commands">
+				<ul class="nav nav-tabs nav-stacked">
+					<li>
+						<a href="{% url 'auto_maintenance_create_gas_maintenance' car.slug %}">Add Gasoline Purchase</a>
+					</li>
+					<li>
+						<a href="{% url 'auto_maintenance_create_scheduled_maintenance' car.slug %}">Add Scheduled Maintenance</a>
+					</li>
+					<li>
+						<a href="{% url 'auto_maintenance_create_oil_change' car.slug %}">Add Oil Change</a>
+					</li>
+					<li>
+						<a href="{% url 'auto_maintenance_create_trip' car.slug %}">Create Trip</a>
+					</li>
+				</ul>
+			</div>
+			<div class="tab-pane" id="trips">
+				<p>
+					Trips
+				</p>
+				<ul>
+					{% for trip in trip_list %}
+					<li>
+						<a href="{{ trip.get_absolute_url }}">{{trip}}</a>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
 
+	</div>
+</div>
+
+{% include "automaintenance/maintenance_list_include.html" %}
+
+{% endblock %}
+
+{% block extrascript %}
+<script>
+$('#myTab a').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+});
+</script>
 {% endblock %}

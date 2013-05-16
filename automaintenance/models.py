@@ -22,7 +22,6 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import date
 from django.conf import settings
 import pytz
-from decimal import Decimal
 
 
 # Time zone choices for all of the record date time values.
@@ -82,9 +81,9 @@ class CarProfile(models.Model):
     fuel_units = models.CharField(max_length=3, choices=FUEL_UNITS,
                                   default=FUEL_UNITS_GALLONS)
     city_rates = models.DecimalField(max_digits=5, decimal_places=2,
-                                    default=Decimal(0.0))
+                                    default=0.0)
     highway_rates = models.DecimalField(max_digits=5, decimal_places=2,
-                                        default=Decimal(0.0))
+                                        default=0.0)
 
 
 class Trip(models.Model):
@@ -162,6 +161,12 @@ class MaintenanceBase(models.Model):
         elif self.date > other.date:
             return 1
         return 0
+    
+    def human_readable_type(self):
+        """ 
+            Returns a human readable type information for this object type.
+        """
+        return "Abstract"
 
     @permalink
     def get_absolute_url(self):
@@ -196,6 +201,17 @@ class GasolinePurchase(MaintenanceBase):
             was a gasoline record.
         """
         return "Gasoline Purchase: %s" % self.date
+    
+    def efficency(self):
+#         if self.filled_tank:
+#             return 0.0
+        return self.tank_mileage / self.fuel_amount
+    
+    def human_readable_type(self):
+        """ 
+            Returns a human readable type information for this object type.
+        """
+        return "Gasoline"
 
 
 class OilChange(MaintenanceBase):
@@ -218,6 +234,12 @@ class OilChange(MaintenanceBase):
             was an oil change record.
         """
         return "Oil Change: %s" % self.date
+    
+    def human_readable_type(self):
+        """ 
+            Returns a human readable type information for this object type.
+        """
+        return "Oil Change"
 
 
 class Maintenance(MaintenanceBase):
@@ -231,3 +253,9 @@ class Maintenance(MaintenanceBase):
             was for mainteance.
         """
         return "Maintenance: %s" % self.date
+    
+    def human_readable_type(self):
+        """ 
+            Returns a human readable type information for this object type.
+        """
+        return "Other"

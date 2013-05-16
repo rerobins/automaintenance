@@ -2,18 +2,42 @@
 
 {% block content %}
 
-  <h2>{{trip.name}}</h2>
+<div class="page-header">
+	<h1>{{trip.name}} 
+		<small>
+			{{trip.start|date:"N d 'y"}}
+			{% if trip.end %}
+			 - {{trip.end|date:"N d 'y"}}
+			{% endif %}
+		</small>
+	</h1>
+</div>
 
-  <p>Car: {{trip.car}}</p>
+<div class="row">
+	<div class="span6">
+		<dl class="dl-horizontal">
+			<dt>
+				Car:
+			</dt>
+			<dd>
+				{{trip.car}}
+			</dd>
+			<dt>
+				Total Price:
+			</dt>
+			<dd>
+				{{total_price}}
+			</dd>
+			<dt>
+				Total Mileage:
+			</dt>
+			<dd>
+				{{total_mileage}}
+			</dd>
+		</dl>
+	</div>
+</div>
   
-  <p>Total Price: {{total_price}}</p>
-  
-  <p>Total Mileage: {{total_mileage}}</p>
-
-  <ul>
-  {% for record in maintenance_list %}
-    <li><a href="{{ record.get_absolute_url }}">{{record}}</a></li>	
-  {% endfor %}
-  </ul>
+{% include "automaintenance/maintenance_list_include.html" %}
 
 {% endblock %}

@@ -29,7 +29,7 @@ from automaintenance.models import Maintenance, Trip
 from automaintenance.forms import CarForm, GasolinePurchaseForm, OilChangeForm
 from automaintenance.forms import MaintenanceForm, TripForm
 
-from decimal import *
+from decimal import Decimal
 
 
 class CarListView(ListView):
