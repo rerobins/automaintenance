@@ -16,7 +16,7 @@
 
   <h2>Add Car</h2>
 
-  <form method="POST" action="{% url 'auto_maintenance_add_car' %}">
+  <form method="post" action="{% url 'auto_maintenance_add_car' %}">
     {% csrf_token %}
     {{ form.as_p }}
 
