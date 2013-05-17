@@ -121,6 +121,7 @@ class MaintenanceForm(ModelForm):
         fields = ('date',
                 'location',
                 'mileage',
+                'type',
                 'description',
                 'total_cost',
                 'trip',

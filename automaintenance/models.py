@@ -253,10 +253,10 @@ class Maintenance(MaintenanceBase):
             Overrides the mainentance unicode string to show that the record
             was for mainteance.
         """
-        return "Maintenance: %s" % self.date
+        return "Maintenance (%s): %s" % (self.type, self.date)
     
     def human_readable_type(self):
         """ 
             Returns a human readable type information for this object type.
         """
-        return "Other"
+        return type

@@ -102,6 +102,19 @@ class CreateMaintenanceView(CreateView):
             owner=request.user)
         return super(CreateView, self).post(request, *args, **kwargs)
 
+    def get_form(self, form_class):
+        """
+            Returns an instance of the form to be used in this view.  Overriden
+            to limit the trips that are going to be used to the ones that
+            are allowed in the currently edited car.
+        """
+        form = super(CreateMaintenanceView, self).get_form(form_class)
+
+        form.fields['trip'].queryset = Trip.objects.filter(
+            car=self.car)
+
+        return form
+
 
 class EditMaintenanceView(UpdateView):
     """
