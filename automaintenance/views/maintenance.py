@@ -33,7 +33,7 @@ class MaintenanceView(DetailView):
     """
         Base view for the maintenance record display.
     """
-    context_object_name = "car"
+    context_object_name = 'record'
     model = Maintenance
 
     def get(self, request, *args, **kwargs):
