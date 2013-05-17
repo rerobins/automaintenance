@@ -14,6 +14,7 @@
 	    			<th>Mileage</th>
 	    			<th>MPG</th>
 	    			<th>Cost</th>
+	    			<th>&nbsp;</th>
 	    		</tr>
     		</thead>
     		<tbody>
@@ -24,6 +25,11 @@
     				<td>{{record.mileage}}</td>
     				<td>{% if record.tank_mileage %}{{ record.efficency|floatformat:3 }}{% endif %}</td>
     				<td>{{record.total_cost}}</td>
+    				<td>
+    					<a class="btn btn-mini" href="{{ record.get_absolute_url }}" data-toggle="tooltip" title="View Record"><i class="icon-eye-open"></i></a>
+						<a class="btn btn-mini" href="{{ record.get_edit_url }}" data-toggle="tooltip" title="Edit Record"><i class="icon-edit"></i></a>
+						<a class="btn btn-mini" href="{{ record.get_delete_url }}" data-toggle="tooltip" title="Delete Record"><i class="icon-remove"></i></a>
+    				</td>
     			</tr>
     			{% endfor %}
     		</tbody>

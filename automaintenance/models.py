@@ -21,6 +21,8 @@ from django.db.models import permalink
 from django.contrib.auth.models import User
 from django.template.defaultfilters import date
 from django.conf import settings
+from django.core.urlresolvers import reverse
+
 import pytz
 
 
@@ -168,14 +170,31 @@ class MaintenanceBase(models.Model):
         """
         return "Abstract"
 
-    @permalink
     def get_absolute_url(self):
         """
             Override the url object for this record.
         """
-        return('auto_maintenance_view_record', [str(self.car.slug),
-            str(self.pk)])
-
+        return reverse('auto_maintenance_view_record',
+            kwargs={'car_slug': self.car.slug,
+                    'pk': self.pk})        
+        
+    def get_edit_url(self):
+        """
+            Define a url object for editing maintenance records.
+        """
+        return reverse('auto_maintenance_edit_scheduled_maintenance',
+            kwargs={'car_slug': self.car.slug,
+                    'pk': self.pk})
+    
+    def get_delete_url(self):
+        """
+            Define a url object for deleting maintenance records. 
+        """
+        return reverse('auto_maintenance_delete_scheduled_maintenance',
+            kwargs={'car_slug': self.car.slug,
+                    'pk': self.pk})
+            
+    
 
 class GasolinePurchase(MaintenanceBase):
     """
@@ -187,13 +206,7 @@ class GasolinePurchase(MaintenanceBase):
     fuel_amount = models.DecimalField(max_digits=7, decimal_places=3)
     filled_tank = models.BooleanField(default=True)
 
-    @permalink
-    def get_absolute_url(self):
-        """
-            Absolute URL for the detailed record.
-        """
-        return('auto_gasolinepurchase_view_record', [str(self.car.slug),
-            str(self.pk)])
+    
 
     def __unicode__(self):
         """
@@ -212,6 +225,30 @@ class GasolinePurchase(MaintenanceBase):
             Returns a human readable type information for this object type.
         """
         return "Gasoline"
+    
+    def get_absolute_url(self):
+        """
+            Absolute URL for the detailed record.
+        """
+        return reverse('auto_gasolinepurchase_view_record',
+            kwargs={'car_slug': self.car.slug,
+                    'pk': self.pk})  
+    
+    def get_edit_url(self):
+        """
+            Define a url object for editing gasoline records.
+        """
+        return reverse('auto_maintenance_edit_gas_maintenance',
+            kwargs={'car_slug': self.car.slug,
+                    'pk': self.pk})
+    
+    def get_delete_url(self):
+        """
+            Define a url object for deleting gasoline records. 
+        """
+        return reverse('auto_maintenance_delete_gas_maintenance',
+            kwargs={'car_slug': self.car.slug,
+                    'pk': self.pk})
 
 
 class OilChange(MaintenanceBase):
@@ -220,13 +257,29 @@ class OilChange(MaintenanceBase):
         record as the oil change.
     """
 
-    @permalink
     def get_absolute_url(self):
         """
             Absolute URL for the detailed record.
         """
-        return('auto_oilchange_view_record', [str(self.car.slug),
-            str(self.pk)])
+        return reverse('auto_oilchange_view_record',
+            kwargs={'car_slug': self.car.slug,
+                    'pk': self.pk})  
+    
+    def get_edit_url(self):
+        """
+            Define a url object for editing gasoline records.
+        """
+        return reverse('auto_maintenance_edit_oil_change',
+            kwargs={'car_slug': self.car.slug,
+                    'pk': self.pk})
+    
+    def get_delete_url(self):
+        """
+            Define a url object for deleting gasoline records. 
+        """
+        return reverse('auto_maintenance_delete_oil_change',
+            kwargs={'car_slug': self.car.slug,
+                    'pk': self.pk})
 
     def __unicode__(self):
         """
