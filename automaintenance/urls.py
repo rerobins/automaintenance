@@ -16,16 +16,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 from django.contrib.auth.decorators import login_required
-from django.conf.urls import *
+from django.conf.urls import url, patterns
 
-from automaintenance.views import CarListView, CreateCarView, DisplayCar
-from automaintenance.views import CreateGasolinePurchase, MaintenanceView
-from automaintenance.views import EditMaintenanceView, DeleteMaintenanceView
-from automaintenance.views import EditGasolinePurchase, DeleteGasolinePurchase
-from automaintenance.views import CreateMaintenanceView, CreateOilChange
-from automaintenance.views import EditOilChange, DeleteOilChange
-from automaintenance.views import GasolinePurchaseView, OilChangeView
-from automaintenance.views import CreateTripView, DisplayTrip
+from automaintenance.views.car import CarListView, CreateCarView, DisplayCar
+from automaintenance.views.maintenance import CreateGasolinePurchase, MaintenanceView
+from automaintenance.views.maintenance import EditMaintenanceView, DeleteMaintenanceView
+from automaintenance.views.maintenance import EditGasolinePurchase, DeleteGasolinePurchase
+from automaintenance.views.maintenance import CreateMaintenanceView, CreateOilChange
+from automaintenance.views.maintenance import EditOilChange, DeleteOilChange
+from automaintenance.views.maintenance import GasolinePurchaseView, OilChangeView
+from automaintenance.views.trip import CreateTripView, DisplayTrip
 
 urlpatterns = patterns('',
     url(r'^$', login_required(CarListView.as_view()),

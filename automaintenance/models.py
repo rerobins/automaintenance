@@ -246,6 +246,7 @@ class Maintenance(MaintenanceBase):
     """
         Other Maintenance record.
     """
+    type = models.CharField(max_length=100)
 
     def __unicode__(self):
         """
