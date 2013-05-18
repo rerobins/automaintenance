@@ -26,6 +26,7 @@ from automaintenance.views.maintenance import CreateMaintenanceView, CreateOilCh
 from automaintenance.views.maintenance import EditOilChange, DeleteOilChange
 from automaintenance.views.maintenance import GasolinePurchaseView, OilChangeView
 from automaintenance.views.trip import CreateTripView, DisplayTrip
+from automaintenance.views.report import ReportView
 
 urlpatterns = patterns('',
     url(r'^$', login_required(CarListView.as_view()),
@@ -88,5 +89,11 @@ urlpatterns = patterns('',
     url(r'^car/(?P<car_slug>[^/]+)/trip/(?P<slug>[^/]+)/$',
         login_required(DisplayTrip.as_view()),
         name='auto_maintenance_trip_view'),
+                       
+    # Reports
+    url(r'^car/(?P<car_slug>[^/]+)/reports/$',
+        login_required(ReportView.as_view()),
+        name='auto_maintenance_reports', 
+        kwargs={'end_date': '2013-05-17', 'start_date': '2012-01-01'}),
 
 )

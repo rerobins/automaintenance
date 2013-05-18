@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h2>Car Slug: {{car_slug}}</h2>
+  <h2>Start Date: {{start_date}}</h2>
+  <h2>End Date: {{end_date}}</h2>
+  
+<div class="row">
+	<div id="placeholder" class="span12" style="height: 150"></div>
+</div>
+  
+  {% include "automaintenance/maintenance_list_include.html" %}
+
+{% endblock %}
+
+{% block extrascript %}
+<script language="javascript" type="text/javascript" src="http://rho.local/javascript/flot/jquery.flot.js"></script>
+<script language="javascript" type="text/javascript" src="http://rho.local/javascript/flot/jquery.flot.time.js"></script>
+
+<script type="text/javascript">
+
+	$(function() {
+
+		var d = [
+		
+			{% for record in maintenance_list %}
+				[{{record.date|date:"U"}}000, {{record.efficency}} ], 	
+			{% endfor %}
+		
+		]; 
+
+		$.plot("#placeholder", [d], {
+			lines: { show:true },
+			points: { show: true, fill: false },
+			xaxis: { mode: "time", timeformat: "%Y/%m/%d" }
+		});
+	});
+</script>
+{% endblock %}
+s
