@@ -93,7 +93,6 @@ urlpatterns = patterns('',
     # Reports
     url(r'^car/(?P<car_slug>[^/]+)/reports/$',
         login_required(ReportView.as_view()),
-        name='auto_maintenance_reports', 
-        kwargs={'end_date': '2013-05-17', 'start_date': '2012-01-01'}),
+        name='auto_maintenance_reports'),
 
 )

@@ -20,6 +20,11 @@ from django.views.generic.base import TemplateView
 
 from automaintenance.models import GasolinePurchase, Car
 
+from django.utils.timezone import make_aware, get_default_timezone
+from django.utils.dateparse import parse_date
+
+from datetime import datetime, time, timedelta
+
 class ReportView(TemplateView):
     
     template_name = "automaintenance/report.html"
@@ -29,8 +34,24 @@ class ReportView(TemplateView):
         
         car = Car.objects.filter(slug=kwargs['car_slug'])
         
-        records = GasolinePurchase.objects.filter(car=car).filter(date__gte=kwargs['start_date']).filter(date__lte=kwargs['end_date'])
+        end_date = datetime.now()
+        if 'end_date' in self.request.GET:  
+            end_date_string = self.request.GET['end_date']             
+            end_date = datetime.combine(parse_date(end_date_string), time(0))
+            
+        start_date = end_date - timedelta(weeks=4)
+        if 'start_date' in self.request.GET:
+            start_date_string = self.request.GET['start_date']
+            start_date = datetime.combine(parse_date(start_date_string), time(0))
         
-        context['maintenance_list'] = records
+        start_date = make_aware(start_date, get_default_timezone())
+        end_date = make_aware(end_date, get_default_timezone())
+        
+        records = GasolinePurchase.objects.filter(car=car).filter(date__gte=start_date).filter(date__lte=end_date)
+        
+        context['maintenance_list'] = records 
+        context['start_date'] = start_date
+        context['end_date'] = end_date
         
         return context
+    

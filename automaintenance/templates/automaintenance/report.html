@@ -2,15 +2,20 @@
 
 {% block content %}
 
-  <h2>Car Slug: {{car_slug}}</h2>
-  <h2>Start Date: {{start_date}}</h2>
-  <h2>End Date: {{end_date}}</h2>
-  
+
 <div class="row">
+	{% if maintenance_list %}
 	<div id="placeholder" class="span12" style="height: 150"></div>
+	{% else %}
+	<div class="span12">
+		<h2 class="text-center">No Data</h2>
+	</div>
+	{% endif %}
 </div>
+
+
   
-  {% include "automaintenance/maintenance_list_include.html" %}
+  {% include "automaintenance/maintenance_list_include.html" with type="Gasoline" %}
 
 {% endblock %}
 
@@ -38,4 +43,3 @@
 	});
 </script>
 {% endblock %}
-s
