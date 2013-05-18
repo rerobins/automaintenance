@@ -15,7 +15,7 @@
 
   <h2>{{command}} Scheduled Maintenance</h2>
 
-  <form method="POST" action=".">
+  <form method="post" action=".">
     {% csrf_token %}
     {{ form.as_p }}
 
