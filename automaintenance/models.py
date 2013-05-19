@@ -206,8 +206,6 @@ class GasolinePurchase(MaintenanceBase):
     fuel_amount = models.DecimalField(max_digits=7, decimal_places=3)
     filled_tank = models.BooleanField(default=True)
 
-    
-
     def __unicode__(self):
         """
             Overrides the maintenance unicode string to show that this record

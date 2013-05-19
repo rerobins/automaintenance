@@ -2,10 +2,13 @@
 
 {% block content %}
 
+<div class="page-header">
+	<h1>{{ car }} <small>{% block report_type %}Empty Report{%endblock%}</small></h1>
+</div>
 
 <div class="row">
 	{% if maintenance_list %}
-	<div id="placeholder" class="span12" style="height: 150"></div>
+	<div id="placeholder" class="span12" style="height: 300"></div>
 	{% else %}
 	<div class="span12">
 		<h2 class="text-center">No Data</h2>
@@ -13,33 +16,33 @@
 	{% endif %}
 </div>
 
-
-  
-  {% include "automaintenance/maintenance_list_include.html" with type="Gasoline" %}
+{% include "automaintenance/maintenance_list_include.html" with type="Gasoline" %}
 
 {% endblock %}
 
 {% block extrascript %}
-<script language="javascript" type="text/javascript" src="http://rho.local/javascript/flot/jquery.flot.js"></script>
-<script language="javascript" type="text/javascript" src="http://rho.local/javascript/flot/jquery.flot.time.js"></script>
-
-<script type="text/javascript">
-
-	$(function() {
-
-		var d = [
+	{% if maintenance_list %}
+		<script language="javascript" type="text/javascript" src="http://rho.local/javascript/flot/jquery.flot.js"></script>
+		<script language="javascript" type="text/javascript" src="http://rho.local/javascript/flot/jquery.flot.time.js"></script>
 		
-			{% for record in maintenance_list %}
-				[{{record.date|date:"U"}}000, {{record.efficency}} ], 	
-			{% endfor %}
+		<script type="text/javascript">
 		
-		]; 
+			$(function() {
+		
+				var d = [
+				
+					{% block data_javascript %}
 
-		$.plot("#placeholder", [d], {
-			lines: { show:true },
-			points: { show: true, fill: false },
-			xaxis: { mode: "time", timeformat: "%Y/%m/%d" }
-		});
-	});
-</script>
+					{% endblock %}
+				
+				]; 
+		
+				$.plot("#placeholder", [d], {
+					lines: { show:true },
+					points: { show: true, fill: false },
+					xaxis: { mode: "time", timeformat: "%Y/%m/%d" }
+				});
+			});
+		</script>
+	{% endif %}
 {% endblock %}

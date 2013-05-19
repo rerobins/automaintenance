@@ -1,0 +1,8 @@
+{% extends "automaintenance/report.html" %}
+
+{% block data_javascript %}
+	{% for record in maintenance_list %}
+		[{{record.date|date:"U"}}000, {{record.efficency}} ], 	
+	{% endfor %}
+{% endblock %}
+					

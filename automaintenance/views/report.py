@@ -32,7 +32,7 @@ class ReportView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ReportView, self).get_context_data(**kwargs)
         
-        car = Car.objects.filter(slug=kwargs['car_slug'])
+        car = Car.objects.get(slug=kwargs['car_slug'])
         
         end_date = datetime.now()
         if 'end_date' in self.request.GET:  
@@ -52,6 +52,17 @@ class ReportView(TemplateView):
         context['maintenance_list'] = records 
         context['start_date'] = start_date
         context['end_date'] = end_date
+        context['car'] = car
         
         return context
+    
+
+class DistancePerUnitReport(ReportView):
+    
+    template_name = "automaintenance/report/distance_per_unit.html"
+    
+
+class CostPerDistanceReport(ReportView):
+    
+    template_name = "automaintenance/report/cost_per_distance.html"
     
