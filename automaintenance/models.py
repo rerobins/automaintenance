@@ -312,4 +312,4 @@ class Maintenance(MaintenanceBase):
         """ 
             Returns a human readable type information for this object type.
         """
-        return type
+        return self.type
