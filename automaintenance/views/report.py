@@ -35,7 +35,7 @@ class ReportView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ReportView, self).get_context_data(**kwargs)
         
-        car = Car.objects.get(slug=kwargs['car_slug'])
+        car = Car.objects.get(owner=self.request.user, slug=kwargs['car_slug'])
         
         end_date = datetime.now()
         if 'end_date' in self.request.GET:  
