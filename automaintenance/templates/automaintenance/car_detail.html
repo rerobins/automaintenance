@@ -34,6 +34,9 @@
 			<li>
 				<a href="#trips">Trips</a>
 			</li>
+			<li>
+				<a href="#reports">Reports</a>
+			</li>
 		</ul>
 
 		<div class="tab-content">
@@ -54,16 +57,16 @@
 				</ul>
 			</div>
 			<div class="tab-pane" id="trips">
-				<p>
-					Trips
-				</p>
-				<ul>
+				<ul class="nav nav-tabs nav-stacked">
 					{% for trip in trip_list %}
 					<li>
 						<a href="{{ trip.get_absolute_url }}">{{trip}}</a>
 					</li>
 					{% endfor %}
 				</ul>
+			</div>
+			<div class="tab-pane" id="reports">
+				{% include "automaintenance/report/report_list_include.html" %}
 			</div>
 		</div>
 

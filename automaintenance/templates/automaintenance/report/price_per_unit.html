@@ -1,12 +1,12 @@
 {% extends "automaintenance/report.html" %}
 
 {% block report_type %}
-Cost vs. Distance
+Price Per Gallon vs. Time
 {%endblock%}
 
 {% block data_javascript %}
 	{% for record in maintenance_list %}
-		[{{record.date|date:"U"}}000, {{record.price_per_unit}} ], 	
+		[{{record.date|date:"U"}}000, {{record.efficency}} ], 	
 	{% endfor %}
 {% endblock %}
 					

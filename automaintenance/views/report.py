@@ -26,6 +26,9 @@ from django.utils.dateparse import parse_date
 from datetime import datetime, time, timedelta
 
 class ReportView(TemplateView):
+    """
+        Default report view.
+    """
     
     template_name = "automaintenance/report.html"
     
@@ -58,11 +61,22 @@ class ReportView(TemplateView):
     
 
 class DistancePerUnitReport(ReportView):
-    
+    """
+        Distance per unit report.
+    """
     template_name = "automaintenance/report/distance_per_unit.html"
     
 
 class CostPerDistanceReport(ReportView):
-    
+    """
+        Cost per distance report.
+    """
     template_name = "automaintenance/report/cost_per_distance.html"
+    
+
+class PricePerUnitReport(ReportView):
+    """
+        Price per unit report.
+    """
+    template_name = "automaintenance/report/price_per_unit.html"
     

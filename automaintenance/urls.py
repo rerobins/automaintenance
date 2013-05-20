@@ -27,6 +27,7 @@ from automaintenance.views.maintenance import EditOilChange, DeleteOilChange
 from automaintenance.views.maintenance import GasolinePurchaseView, OilChangeView
 from automaintenance.views.trip import CreateTripView, DisplayTrip
 from automaintenance.views.report import DistancePerUnitReport, CostPerDistanceReport
+from automaintenance.views.report import PricePerUnitReport
 
 urlpatterns = patterns('',
     url(r'^$', login_required(CarListView.as_view()),
@@ -97,5 +98,8 @@ urlpatterns = patterns('',
     url(r'^car/(?P<car_slug>[^/]+)/reports/cpm/$',
         login_required(CostPerDistanceReport.as_view()),
         name='auto_maintenance_cost_per_distance'),
+    url(r'^car/(?P<car_slug>[^/]+)/reports/ppg/$',
+        login_required(CostPerDistanceReport.as_view()),
+        name='auto_maintenance_price_per_gallon'),
 
 )
