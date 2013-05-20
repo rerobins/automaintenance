@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block extrahead %}
+<link href="http://rho.local/javascript/datepicker/css/datepicker.css" rel="stylesheet" media="screen">
+{% endblock %}
+
 {% block content %}
 
 <div class="page-header">
@@ -16,14 +20,46 @@
 	{% endif %}
 </div>
 
+<div class="page-header">
+	<h2>Range</h2>
+</div>
+
+<div class="row">
+	<div class="span10 offset1">
+		<form method="get" action=".">
+			<div class="input-append date" id="start_date" data-date="{{start_date|date:"Y-m-d"}}" data-date-format="yyyy-mm-dd">
+				<input class="span2" size="16" type="text" value="{{start_date|date:"Y-m-d"}}" name="start_date" readonly>
+				<span class="add-on"><i class="icon-calendar"></i></span>
+			  </div>
+			  - 
+			  <div class="input-append date" id="end_date" data-date="{{end_date|date:"Y-m-d"}}" data-date-format="yyyy-mm-dd">
+				<input class="span2" size="16" type="text" value="{{end_date|date:"Y-m-d"}}" name="end_date" readonly>
+				<span class="add-on"><i class="icon-calendar"></i></span>
+			  </div>
+
+			<input type="submit" value="Update">
+		</form>
+	</div>
+</div>
+
 {% include "automaintenance/maintenance_list_include.html" with type="Gasoline" %}
 
+{% endblock %}
+
+{% block submenus %}
+<li class="dropdown">
+	<a id="report_drop" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="report_drop">
+		{% include "automaintenance/report/report_list_include.html" %}
+	</ul>
+</li>
 {% endblock %}
 
 {% block extrascript %}
 	{% if maintenance_list %}
 		<script language="javascript" type="text/javascript" src="http://rho.local/javascript/flot/jquery.flot.js"></script>
 		<script language="javascript" type="text/javascript" src="http://rho.local/javascript/flot/jquery.flot.time.js"></script>
+		<script language="javascript" type="text/javascript" src="http://rho.local/javascript/datepicker/js/bootstrap-datepicker.js"></script>
 		
 		<script type="text/javascript">
 		
@@ -42,6 +78,9 @@
 					points: { show: true, fill: false },
 					xaxis: { mode: "time", timeformat: "%Y/%m/%d" }
 				});
+				
+				$('#start_date').datepicker();
+				$('#end_date').datepicker();
 			});
 		</script>
 	{% endif %}
