@@ -24,6 +24,7 @@ from django.template.defaultfilters import slugify
 from automaintenance.models import Car, GasolinePurchase, OilChange
 from automaintenance.models import Maintenance, Trip
 from automaintenance.views.forms import CarForm
+from automaintenance.views import MAINTENANCE_CRUD_BACK_KEY
 
 class CarListView(ListView):
     """
@@ -124,6 +125,6 @@ class DisplayCar(DetailView):
         # Populate the tirp list for this car
         context['trip_list'] = Trip.objects.filter(car=self.object)
         
-        self.request.session['maintenance_add_back'] = self.object
+        self.request.session[MAINTENANCE_CRUD_BACK_KEY] = self.object
 
         return context

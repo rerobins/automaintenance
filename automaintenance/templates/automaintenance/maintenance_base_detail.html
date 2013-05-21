@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+	<h1>{{record.human_readable_type}}<small>{{record.date}}</small></h1>
+</div>
+
+<div class="row">
+	<div class="span6">
+	  
+	  <dl class="dl-horizontal">
+	      <dt>Car:</dt>
+     	  <dd>{{record.car.name}}</dd>
+     	  
+     	  <dt>Location:</dt>
+     	  <dd>{{record.location}}</dd>
+     	  
+     	  
+	  </dl>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+	  <p>
+	  	<a class="btn" href="{{ back_url }}">Back</a>
+	  	<a class="btn btn-info" href="{{ record.get_edit_url }}">Edit</a> 
+	  	<a class="btn btn-danger" href="{{ record.get_delete_url }}">Delete</a>
+	  </p>
+  </div>
+</div>
+
+{% endblock %}

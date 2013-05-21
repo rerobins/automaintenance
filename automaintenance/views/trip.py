@@ -24,6 +24,7 @@ from django.shortcuts import get_object_or_404
 from automaintenance.models import Car, GasolinePurchase, OilChange
 from automaintenance.models import Maintenance, Trip
 from automaintenance.views.forms import TripForm
+from automaintenance.views import MAINTENANCE_CRUD_BACK_KEY
 
 from decimal import Decimal
 
@@ -115,6 +116,6 @@ class DisplayTrip(DetailView):
         context['total_price'] = total_price
         context['total_mileage'] = total_mileage
         
-        self.request.session['maintenance_add_back'] = self.object
+        self.request.session[MAINTENANCE_CRUD_BACK_KEY] = self.object
 
         return context

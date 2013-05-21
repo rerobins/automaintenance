@@ -1,12 +1,2 @@
-{% extends "base.html" %}
+{% extends "automaintenance/maintenance_base_confirm_delete.html" %}
 
-{% block content %}
-
-  <p>Are you sure you want to delete?</p>
-
-  <form method="post" action=".">
-    {% csrf_token %}
-    <input type="submit" value="Yes">
-  </form>
-
-{% endblock %}

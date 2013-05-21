@@ -26,6 +26,7 @@ from automaintenance.models import Car, GasolinePurchase, OilChange
 from automaintenance.models import Maintenance, Trip
 from automaintenance.views.forms import GasolinePurchaseForm, OilChangeForm
 from automaintenance.views.forms import MaintenanceForm, TripForm
+from automaintenance.views import MAINTENANCE_CRUD_BACK_KEY
 
 from decimal import Decimal
 
@@ -46,6 +47,17 @@ class MaintenanceView(DetailView):
             owner=self.request.user)
 
         return super(DetailView, self).get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super(MaintenanceView, self).get_context_data(**kwargs)
+        
+        return_value = self.car.get_absolute_url()
+        if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
+            return_value = self.request.session[MAINTENANCE_CRUD_BACK_KEY].get_absolute_url()
+            del self.request.session[MAINTENANCE_CRUD_BACK_KEY]
+        context['back_url'] = return_value
+        
+        return context
 
     def get_queryset(self):
         """
@@ -82,9 +94,9 @@ class CreateMaintenanceView(CreateView):
             Override the success url to go back to the car's detail page.
         """
         return_value = self.car.get_absolute_url()
-        if 'maintenance_add_back' in self.request.session:
-            return_value = self.request.session['maintenance_add_back'].get_absolute_url()
-            del self.request.session['maintenance_add_back']
+        if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
+            return_value = self.request.session[MAINTENANCE_CRUD_BACK_KEY].get_absolute_url()
+            del self.request.session[MAINTENANCE_CRUD_BACK_KEY]
         
         return return_value
 
@@ -156,9 +168,9 @@ class EditMaintenanceView(UpdateView):
             Override the success url to go back to the car's detail page.
         """
         return_value = self.car.get_absolute_url()
-        if 'maintenance_add_back' in self.request.session:
-            return_value = self.request.session['maintenance_add_back'].get_absolute_url()
-            del self.request.session['maintenance_add_back']
+        if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
+            return_value = self.request.session[MAINTENANCE_CRUD_BACK_KEY].get_absolute_url()
+            del self.request.session[MAINTENANCE_CRUD_BACK_KEY]
         
         return return_value
 
@@ -219,9 +231,9 @@ class DeleteMaintenanceView(DeleteView):
             Override the success url to go back to the car's detail page.
         """
         return_value = self.car.get_absolute_url()
-        if 'maintenance_add_back' in self.request.session:
-            return_value = self.request.session['maintenance_add_back'].get_absolute_url()
-            del self.request.session['maintenance_add_back']
+        if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
+            return_value = self.request.session[MAINTENANCE_CRUD_BACK_KEY].get_absolute_url()
+            del self.request.session[MAINTENANCE_CRUD_BACK_KEY]
         
         return return_value
     
