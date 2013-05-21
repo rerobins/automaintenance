@@ -123,5 +123,7 @@ class DisplayCar(DetailView):
 
         # Populate the tirp list for this car
         context['trip_list'] = Trip.objects.filter(car=self.object)
+        
+        self.request.session['maintenance_add_back'] = self.object
 
         return context

@@ -81,7 +81,12 @@ class CreateMaintenanceView(CreateView):
         """
             Override the success url to go back to the car's detail page.
         """
-        return self.car.get_absolute_url()
+        return_value = self.car.get_absolute_url()
+        if 'maintenance_add_back' in self.request.session:
+            return_value = self.request.session['maintenance_add_back'].get_absolute_url()
+            del self.request.session['maintenance_add_back']
+        
+        return return_value
 
     def get(self, request, *args, **kwargs):
         """
@@ -150,7 +155,12 @@ class EditMaintenanceView(UpdateView):
         """
             Override the success url to go back to the car's detail page.
         """
-        return self.car.get_absolute_url()
+        return_value = self.car.get_absolute_url()
+        if 'maintenance_add_back' in self.request.session:
+            return_value = self.request.session['maintenance_add_back'].get_absolute_url()
+            del self.request.session['maintenance_add_back']
+        
+        return return_value
 
     def get(self, request, *args, **kwargs):
         """
@@ -208,8 +218,13 @@ class DeleteMaintenanceView(DeleteView):
         """
             Override the success url to go back to the car's detail page.
         """
-        return self.car.get_absolute_url()
-
+        return_value = self.car.get_absolute_url()
+        if 'maintenance_add_back' in self.request.session:
+            return_value = self.request.session['maintenance_add_back'].get_absolute_url()
+            del self.request.session['maintenance_add_back']
+        
+        return return_value
+    
 
 class CreateGasolinePurchase(CreateMaintenanceView):
     """

@@ -114,5 +114,7 @@ class DisplayTrip(DetailView):
                 
         context['total_price'] = total_price
         context['total_mileage'] = total_mileage
+        
+        self.request.session['maintenance_add_back'] = self.object
 
         return context
