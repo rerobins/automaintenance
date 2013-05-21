@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "automaintenance/car_base.html" %}
 
 {% block extrahead %}
 <link href="http://rho.local/javascript/datepicker/css/datepicker.css" rel="stylesheet" media="screen">
@@ -44,15 +44,6 @@
 
 {% include "automaintenance/maintenance_list_include.html" with type="Gasoline" %}
 
-{% endblock %}
-
-{% block submenus %}
-<li class="dropdown">
-	<a id="report_drop" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
-	<ul class="dropdown-menu" role="menu" aria-labelledby="report_drop">
-		{% include "automaintenance/report/report_list_include.html" %}
-	</ul>
-</li>
 {% endblock %}
 
 {% block extrascript %}
