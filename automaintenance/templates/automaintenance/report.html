@@ -12,7 +12,7 @@
 
 <div class="row">
 	{% if maintenance_list %}
-	<div id="placeholder" class="span12" style="height: 300"></div>
+	<div id="placeholder" class="span12" style="height: 300px"></div>
 	{% else %}
 	<div class="span12">
 		<h2 class="text-center">No Data</h2>
@@ -25,21 +25,23 @@
 </div>
 
 <div class="row">
+
 	<div class="span10 offset1">
 		<form method="get" action=".">
-			<div class="input-append date" id="start_date" data-date="{{start_date|date:"Y-m-d"}}" data-date-format="yyyy-mm-dd">
-				<input class="span2" size="16" type="text" value="{{start_date|date:"Y-m-d"}}" name="start_date" readonly>
+			<div class="input-append date" id="start_date_picker" data-date="{{start_date|date:"Y-m-d"}}" data-date-format="yyyy-mm-dd">
+				<input type="text" value="{{start_date|date:"Y-m-d"}}" name="start_date" readonly>
 				<span class="add-on"><i class="icon-calendar"></i></span>
-			  </div>
-			  - 
-			  <div class="input-append date" id="end_date" data-date="{{end_date|date:"Y-m-d"}}" data-date-format="yyyy-mm-dd">
-				<input class="span2" size="16" type="text" value="{{end_date|date:"Y-m-d"}}" name="end_date" readonly>
+			</div>
+			-
+			<div class="input-append date" id="end_date_picker" data-date="{{end_date|date:"Y-m-d"}}" data-date-format="yyyy-mm-dd">
+				<input type="text" value="{{end_date|date:"Y-m-d"}}" name="end_date" readonly>
 				<span class="add-on"><i class="icon-calendar"></i></span>
-			  </div>
+			</div>
 
 			<input type="submit" value="Update">
 		</form>
 	</div>
+
 </div>
 
 {% include "automaintenance/maintenance_list_include.html" with type="Gasoline" %}
@@ -70,8 +72,8 @@
 					xaxis: { mode: "time", timeformat: "%Y/%m/%d" }
 				});
 				
-				$('#start_date').datepicker();
-				$('#end_date').datepicker();
+				$('#start_date_picker').datepicker();
+				$('#end_date_picker').datepicker();
 			});
 		</script>
 	{% endif %}
