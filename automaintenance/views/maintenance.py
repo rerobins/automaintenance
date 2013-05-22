@@ -209,6 +209,15 @@ class DeleteMaintenanceView(DeleteView):
             owner=request.user)
 
         return super(DeleteView, self).get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super(DeleteView, self).get_context_data(**kwargs)
+        
+        context['back_object'] = self.car
+        if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
+            context['back_object']  = self.request.session[MAINTENANCE_CRUD_BACK_KEY]
+        
+        return context
 
     def post(self, request, *args, **kwargs):
         """
