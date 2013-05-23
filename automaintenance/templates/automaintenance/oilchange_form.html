@@ -1,14 +1,83 @@
 {% extends "automaintenance/car_base.html" %}
 
+{% block extrahead %}
+<link href="http://rho.local/javascript/datepicker/css/datepicker.css" rel="stylesheet" media="screen">
+<link href="http://rho.local/javascript/timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" media="screen">
+{% endblock %}
+
 {% block content %}
 
-  <h2>{{command}} Oil Change</h2>
+<div class="page-header">
+	<h1>{{ car }} <small>{% block report_type %}{{command}} Oil Change{%endblock%}</small></h1>
+</div>
 
-  <form method="post" action=".">
-    {% csrf_token %}
-    {{ form.as_p }}
+<div class="row">
+	<div class="span10 offset1">
+		<form method="post" action=".">
+			{% csrf_token %}
 
-    <input type="submit" value="{{command}}">
-  </form>
+			<fieldset>
+				<legend>
+					Location and Time
+				</legend>
+				
+				{% include "automaintenance/date_time_form_template.html" with field=form.date error=form.errors.date %}
+				
+				{% include "automaintenance/form_template.html" with field=form.location error=form.errors.location %}
 
+			</fieldset>
+
+			<fieldset>
+				<legend>
+					Details
+				</legend>
+				
+				{% include "automaintenance/form_template.html" with field=form.mileage error=form.errors.mileage %}
+								
+				{% include "automaintenance/form_template.html" with field=form.total_cost error=form.errors.total_cost %}
+
+			</fieldset>
+
+			<fieldset>
+				<legend>
+					Other
+				</legend>
+				
+				{% include "automaintenance/form_template.html" with field=form.description error=form.errors.description %}
+				
+				{% include "automaintenance/form_template.html" with field=form.trip error=form.errors.trip %}
+
+			</fieldset>
+			
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">
+					{{command}}
+				</button>
+				<button type="button" class="btn">
+					Cancel
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block extrascript %}
+	<script language="javascript" type="text/javascript" src="http://rho.local/javascript/datepicker/js/bootstrap-datepicker.js"></script>
+	<script language="javascript" type="text/javascript" src="http://rho.local/javascript/timepicker/js/bootstrap-timepicker.min.js"></script>
+	
+	<script type="text/javascript">
+	
+		$(function() {
+			
+			$('#date_0_picker').datepicker();
+			$('#id_date_picker').timepicker({
+                minuteStep: 1,
+                template: 'modal',
+                showSeconds: false,
+                showMeridian: false
+            });
+		});
+	</script>
 {% endblock %}

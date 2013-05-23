@@ -2,13 +2,44 @@
 
 {% block content %}
 
-  <h2>Add Car</h2>
+<div class="page-header">
+	<h1>Add Car</h1>
+</div>
 
-  <form method="post" action="{% url 'auto_maintenance_add_car' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
+<div class="row">
+	<div class="span10 offset1">
+		
+		{% if form.non_field_errors %}
+		<div class="alert alert-error">
+  			<strong>ERROR:</strong> {{ form.non_field_errors|striptags }}
+		</div>
+		{% endif %}
+		
+		
+		<form method="post" action="{% url 'auto_maintenance_add_car' %}" class="form-horizontal">
+			{% csrf_token %}
+			<fieldset>
 
-    <input type="submit" value="Add">
-  </form>
+				<legend>
+					Car Details
+				</legend>
+				
+				{% include "automaintenance/form_template.html" with field=form.car_type error=form.errors.car_type %}
+				
+				{% include "automaintenance/form_template.html" with field=form.name error=form.errors.name %}
+				
+			</fieldset>
+
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">
+					Add Car
+				</button>
+				<button type="button" class="btn">
+					Cancel
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
 
 {% endblock %}

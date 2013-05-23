@@ -8,7 +8,7 @@
 {% block content %}
 
 <div class="page-header">
-	<h1>{{ car }} <small>{% block report_type %}Add Scheduled Maintenance{%endblock%}</small></h1>
+	<h1>{{ car }} <small>{% block report_type %}{{command}} Scheduled Maintenance{%endblock%}</small></h1>
 </div>
 
 <div class="row">
@@ -22,31 +22,6 @@
 				</legend>
 				
 				{% include "automaintenance/date_time_form_template.html" with field=form.date error=form.errors.date %}
-
-{% comment %}
-				<div class="control-group{% if 'date' in form.errors %} error{%endif%}">
-					<label class="control-label" for="id_date_0">Date</label>
-					
-					<div class="controls">
-						<div class="input-append date" id="date_0_picker" data-date="{{start_date|date:"Y-m-d"}}" data-date-format="yyyy-mm-dd">
-							<input id="id_date_0" type="text" value="{{start_date|date:"Y-m-d"}}" name="date_0" readonly>
-							<span class="add-on"><i class="icon-calendar"></i></span>
-						</div>
-		
-						<div class="input-append bootstrap-timepicker">
-							<input id="date_1_picker" name="date_1" type="text" class="input-small" readonly>
-							<span class="add-on"><i class="icon-time"></i></span>
-						</div>
-						
-						{% if 'date' in form.errors %}
-						<span class="help-block">
-							{{ form.errors.date|striptags }}
-						</span>
-						{% endif %}
-						
-					</div>
-				</div>
-{% endcomment %}
 				
 				{% include "automaintenance/form_template.html" with field=form.location error=form.errors.location %}
 
