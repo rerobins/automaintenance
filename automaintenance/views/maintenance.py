@@ -87,6 +87,7 @@ class CreateMaintenanceView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(CreateView, self).get_context_data(**kwargs)
         context['command'] = 'Add'
+        context['car'] = self.car
         return context
 
     def get_success_url(self):
@@ -154,6 +155,7 @@ class EditMaintenanceView(UpdateView):
         """
         context = super(UpdateView, self).get_context_data(**kwargs)
         context['command'] = 'Update'
+        context['car'] = self.car
         return context
 
     def get_queryset(self):
@@ -216,6 +218,8 @@ class DeleteMaintenanceView(DeleteView):
         context['back_object'] = self.car
         if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
             context['back_object']  = self.request.session[MAINTENANCE_CRUD_BACK_KEY]
+        
+        context['car'] = self.car
         
         return context
 

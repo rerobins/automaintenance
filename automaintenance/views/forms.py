@@ -16,10 +16,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 from django.forms import ModelForm
+from django import forms
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from automaintenance.models import Car, GasolinePurchase, OilChange
 from automaintenance.models import Maintenance, Trip
+from django.forms.util import ErrorList
+
+
+class SpanErrorList(ErrorList):
+    """
+        Error list that overrides how errors are printed out in the forms.
+    """
+    
+    def __unicode__(self):
+        return self.as_divs()
+    
+    def as_divs(self):
+        if not self: return u''
+        return u'<span class="help-block">%s</div>' % ''.join([u'<span class="help-block">%s</span>' % e for e in self])
 
 
 class CarForm(ModelForm):
@@ -81,6 +96,9 @@ class GasolinePurchaseForm(ModelForm):
                 'tank_mileage',
                 'price_per_unit',
                 'fuel_amount', 'trip')
+        widgets = {
+            'date': forms.SplitDateTimeWidget(),
+        }
 
 
 class OilChangeForm(ModelForm):
@@ -103,6 +121,9 @@ class OilChangeForm(ModelForm):
                 'total_cost',
                 'trip',
                 )
+        widgets = {
+            'date': forms.SplitDateTimeWidget(),
+        }
 
 
 class MaintenanceForm(ModelForm):
@@ -110,6 +131,12 @@ class MaintenanceForm(ModelForm):
         Form that will allow for a scheduled maintenance or any other
         maintenance to be added to the specified car.
     """
+    
+    def __init__(self, *args, **kwargs):
+        kwargs_new = {'error_class': SpanErrorList}
+        kwargs_new.update(kwargs)
+        super(MaintenanceForm, self).__init__(*args, **kwargs_new)
+    
 
     class Meta:
         """
@@ -126,6 +153,9 @@ class MaintenanceForm(ModelForm):
                 'total_cost',
                 'trip',
                 )
+        widgets = {
+            'date': forms.SplitDateTimeWidget(),
+        }
 
 
 class TripForm(ModelForm):

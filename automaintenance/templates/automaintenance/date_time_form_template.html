@@ -1,0 +1,31 @@
+
+{% comment %}
+
+	errors: form errors.
+	
+	field: field value.
+
+{% endcomment %}
+
+<div class="control-group{% if errors %} error{%endif%}">
+	<label class="control-label" for="{{field.auto_id}}_0">Date</label>
+	
+	<div class="controls">
+		<div class="input-append date" id="date_0_picker" data-date="{{field.initial|date:"Y-m-d"}}" data-date-format="yyyy-mm-dd">
+			<input id="{{field.auto_id}}_0" type="text" value="{{field.initial|date:"Y-m-d"}}" name="{{field.name}}" readonly>
+			<span class="add-on"><i class="icon-calendar"></i></span>
+		</div>
+
+		<div class="input-append bootstrap-timepicker">
+			<input id="{{field.auto_id}}_picker" name="{{field.auto_id}}_1" type="text" class="input-small" readonly>
+			<span class="add-on"><i class="icon-time"></i></span>
+		</div>
+		
+		{% if errors %}
+		<span class="help-block">
+			{{ errors|striptags }}
+		</span>
+		{% endif %}
+		
+	</div>
+</div>
