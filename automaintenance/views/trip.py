@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
 from django.template.defaultfilters import slugify
 from django.shortcuts import get_object_or_404
@@ -64,9 +64,72 @@ class CreateTripView(CreateView):
                                form.instance.name)
         form.instance.slug = slugify(string)
         return super(CreateTripView, self).form_valid(form)
+    
+
+    def get_context_data(self, **kwargs):
+        """
+            Adding some contextual data to the view including:
+                maintenance list
+        """
+        context = super(CreateTripView, self).get_context_data(**kwargs)
+
+        context['command'] = 'Add'
+        context['car'] = self.car
+
+        return context    
+
+    
+class EditTripView(UpdateView):
+    """
+        Override UpdateView to edit new trip objects.
+    """
+    model = Trip
+    form_class = TripForm
+
+    def get(self, request, *args, **kwargs):
+        """
+            Override get to add a car field to the class object.
+        """
+        self.car = get_object_or_404(Car,
+            slug=self.kwargs.get('car_slug', None), owner=self.request.user)
+        self.initial['car'] = self.car
+        return super(EditTripView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+            Override the post field to add a car field to the class object.
+        """
+        self.car = get_object_or_404(Car,
+            slug=self.kwargs.get('car_slug', None), owner=self.request.user)
+        self.initial['car'] = self.car
+        return super(EditTripView, self).post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        """
+            Override the form_valid method to make sure that the car that the
+            record is defined for is stored in the object.
+        """
+        form.instance.car = self.car
+        string = "%02d%02d%02d%s" % (form.instance.start.year, form.instance.start.month, form.instance.start.day,
+                               form.instance.name)
+        form.instance.slug = slugify(string)
+        return super(EditTripView, self).form_valid(form)
+    
+
+    def get_context_data(self, **kwargs):
+        """
+            Adding some contextual data to the view including:
+                maintenance list
+        """
+        context = super(EditTripView, self).get_context_data(**kwargs)
+
+        context['command'] = 'Edit'
+        context['car'] = self.car
+
+        return context        
 
 
-class DisplayTrip(DetailView):
+class DisplayTripView(DetailView):
     """
         Override DetailView to show records associated with a trip object.
     """
@@ -86,14 +149,14 @@ class DisplayTrip(DetailView):
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None), owner=self.request.user)
 
-        return super(DetailView, self).get(request, *args, **kwargs)
+        return super(DisplayTripView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """
             Adding some contextual data to the view including:
                 maintenance list
         """
-        context = super(DetailView, self).get_context_data(**kwargs)
+        context = super(DisplayTripView, self).get_context_data(**kwargs)
 
         gasoline_list = list(GasolinePurchase.objects.filter(trip=self.object))
         oilchange_list = list(OilChange.objects.filter(trip=self.object))
@@ -119,3 +182,56 @@ class DisplayTrip(DetailView):
         self.request.session[MAINTENANCE_CRUD_BACK_KEY] = self.object
 
         return context
+    
+
+class DeleteTripView(DeleteView):
+    """
+        Override the delete view to delete trip objects.
+    """
+
+    model = Trip
+
+    def get(self, request, *args, **kwargs):
+        """
+            Override get to add a car field to the class object.
+        """
+        self.car = get_object_or_404(Car,
+            slug=self.kwargs.get('car_slug', None),
+            owner=request.user)
+
+        return super(DeleteTripView, self).get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super(DeleteTripView, self).get_context_data(**kwargs)
+        
+        context['back_object'] = self.car
+        if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
+            context['back_object']  = self.request.session[MAINTENANCE_CRUD_BACK_KEY]
+        
+        context['car'] = self.car
+        
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """
+            Override the post field to add a car field to the class object.
+        """
+        self.car = get_object_or_404(Car,
+            slug=self.kwargs.get('car_slug', None),
+            owner=request.user)
+        return super(DeleteTripView, self).post(request, *args, **kwargs)
+
+    def get_queryset(self):
+        """
+            When looking up the object to edit, make sure that the records are
+            only found for the car that is defined in the url.
+        """
+        return self.model.objects.filter(car=self.car)
+
+    def get_success_url(self):
+        """
+            Override the success url to go back to the car's detail page.
+        """
+        return_value = self.car.get_absolute_url()
+        
+        return return_value
