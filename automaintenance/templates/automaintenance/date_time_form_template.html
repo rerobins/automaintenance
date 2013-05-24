@@ -1,13 +1,11 @@
 
 {% comment %}
-
-	errors: form errors.
 	
 	field: field value.
 
 {% endcomment %}
 
-<div class="control-group{% if errors %} error{%endif%}">
+<div class="control-group{% if field.errors %} error{%endif%}">
 	<label class="control-label" for="{{field.auto_id}}_0">Date</label>
 	
 	<div class="controls">
@@ -21,9 +19,9 @@
 			<span class="add-on"><i class="icon-time"></i></span>
 		</div>
 		
-		{% if errors %}
+		{% if field.errors %}
 		<span class="help-block">
-			{{ errors|striptags }}
+			{{ field.errors|striptags }}
 		</span>
 		{% endif %}
 		

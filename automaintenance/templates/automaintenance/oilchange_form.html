@@ -13,7 +13,7 @@
 
 <div class="row">
 	<div class="span10 offset1">
-		<form method="post" action=".">
+		<form method="post" action="." class="form-horizontal">
 			{% csrf_token %}
 
 			<fieldset>
@@ -21,9 +21,9 @@
 					Location and Time
 				</legend>
 				
-				{% include "automaintenance/date_time_form_template.html" with field=form.date error=form.errors.date %}
+				{% include "automaintenance/date_time_form_template.html" with field=form.date %}
 				
-				{% include "automaintenance/form_template.html" with field=form.location error=form.errors.location %}
+				{% include "automaintenance/form_template.html" with field=form.location %}
 
 			</fieldset>
 
@@ -32,9 +32,9 @@
 					Details
 				</legend>
 				
-				{% include "automaintenance/form_template.html" with field=form.mileage error=form.errors.mileage %}
+				{% include "automaintenance/form_template.html" with field=form.mileage %}
 								
-				{% include "automaintenance/form_template.html" with field=form.total_cost error=form.errors.total_cost %}
+				{% include "automaintenance/form_template.html" with field=form.total_cost %}
 
 			</fieldset>
 
@@ -43,9 +43,9 @@
 					Other
 				</legend>
 				
-				{% include "automaintenance/form_template.html" with field=form.description error=form.errors.description %}
+				{% include "automaintenance/form_template.html" with field=form.description %}
 				
-				{% include "automaintenance/form_template.html" with field=form.trip error=form.errors.trip %}
+				{% include "automaintenance/form_template.html" with field=form.trip %}
 
 			</fieldset>
 			

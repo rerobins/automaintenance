@@ -28,6 +28,9 @@ from automaintenance.views.forms import GasolinePurchaseForm, OilChangeForm
 from automaintenance.views.forms import MaintenanceForm, TripForm
 from automaintenance.views import MAINTENANCE_CRUD_BACK_KEY
 
+import datetime
+from django.utils.timezone import utc
+
 from decimal import Decimal
 
 class MaintenanceView(DetailView):
@@ -108,6 +111,7 @@ class CreateMaintenanceView(CreateView):
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None),
             owner=request.user)
+        self.initial['date'] = datetime.datetime.utcnow().replace(tzinfo=utc)
 
         return super(CreateView, self).get(request, *args, **kwargs)
 
@@ -118,6 +122,7 @@ class CreateMaintenanceView(CreateView):
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None),
             owner=request.user)
+        self.initial['date'] = datetime.datetime.utcnow().replace(tzinfo=utc)
         return super(CreateView, self).post(request, *args, **kwargs)
 
     def get_form(self, form_class):

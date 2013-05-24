@@ -2,12 +2,19 @@
 
 {% block content %}
 
-  <h1>Cars</h1>
+<div class="page-header">
+	<h1>Cars</h1>
+</div>
 
-  <ul>
-   {% for car in car_list %}
-     <li><a href="{{ car.get_absolute_url }}">{{ car.name }}</a></li> 
-   {% endfor %}
-  </ul>
+
+<div class="row">
+	<div class="span12">
+	  <ul>
+	   {% for car in car_list %}
+	     <li><a href="{{ car.get_absolute_url }}">{{ car.name }}</a> </li> 
+	   {% endfor %}
+	  </ul>
+  </div>
+</div>
 
 {% endblock %}

@@ -1,19 +1,16 @@
 
 {% comment %}
   field: form field value
-  
-  error: form errors
-	
 {% endcomment %}
 
-<div class="control-group{% if error %} error{%endif%}">
+<div class="control-group{% if field.errors %} error{%endif%}">
 	<label class="control-label" for="{{field.auto_id}}">{{ field.label }}</label>
 
 	<div class="controls">
 		{{ field }}
 
-		{% if error %}
-		<span class="help-block"> {{ error|striptags }} </span>
+		{% if field.errors %}
+		<span class="help-block"> {{ field.errors|striptags }} </span>
 		{% endif %}
 
 	</div>

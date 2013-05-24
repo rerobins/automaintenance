@@ -95,7 +95,9 @@ class GasolinePurchaseForm(ModelForm):
                 'total_cost',
                 'tank_mileage',
                 'price_per_unit',
-                'fuel_amount', 'trip')
+                'fuel_amount', 
+                'trip',
+                'filled_tank')
         widgets = {
             'date': forms.SplitDateTimeWidget(),
         }
