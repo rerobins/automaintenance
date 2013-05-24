@@ -10,10 +10,10 @@
 	
 	<div class="controls">
 		<div class="input-append date" id="{{field.auto_id}}_picker" 
-			data-date="{{field.value|date:"Y-m-d"}}" 
+			data-date="{% if field.value.month %}{{field.value|date:"Y-m-d"}}{%else%}{{field.value}}{%endif%}" 
 			data-date-format="yyyy-mm-dd">
 			<input id="{{field.auto_id}}" type="text" 
-				value="{{field.value|date:"Y-m-d"}}" 
+				value="{% if field.value.month %}{{field.value|date:"Y-m-d"}}{%else%}{{field.value}}{%endif%}" 
 				name="{{field.name}}" readonly>
 			<span class="add-on"><i class="icon-calendar"></i></span>
 		</div>

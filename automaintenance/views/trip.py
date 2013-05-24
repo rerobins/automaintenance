@@ -64,7 +64,6 @@ class CreateTripView(CreateView):
                                form.instance.name)
         form.instance.slug = slugify(string)
         return super(CreateTripView, self).form_valid(form)
-    
 
     def get_context_data(self, **kwargs):
         """
@@ -79,30 +78,12 @@ class CreateTripView(CreateView):
         return context    
 
     
-class EditTripView(UpdateView):
+class EditTripView(UpdateView):   
     """
-        Override UpdateView to edit new trip objects.
+        Override the update view to edit trip items on a specific car.
     """
     model = Trip
     form_class = TripForm
-
-    def get(self, request, *args, **kwargs):
-        """
-            Override get to add a car field to the class object.
-        """
-        self.car = get_object_or_404(Car,
-            slug=self.kwargs.get('car_slug', None), owner=self.request.user)
-        self.initial['car'] = self.car
-        return super(EditTripView, self).get(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        """
-            Override the post field to add a car field to the class object.
-        """
-        self.car = get_object_or_404(Car,
-            slug=self.kwargs.get('car_slug', None), owner=self.request.user)
-        self.initial['car'] = self.car
-        return super(EditTripView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
         """
@@ -110,23 +91,47 @@ class EditTripView(UpdateView):
             record is defined for is stored in the object.
         """
         form.instance.car = self.car
-        string = "%02d%02d%02d%s" % (form.instance.start.year, form.instance.start.month, form.instance.start.day,
-                               form.instance.name)
-        form.instance.slug = slugify(string)
         return super(EditTripView, self).form_valid(form)
-    
 
     def get_context_data(self, **kwargs):
         """
-            Adding some contextual data to the view including:
-                maintenance list
+            Add the command type to the maintenance view for display.
         """
         context = super(EditTripView, self).get_context_data(**kwargs)
-
         context['command'] = 'Edit'
         context['car'] = self.car
+        return context
 
-        return context        
+    def get_queryset(self):
+        """
+            When looking up the object to edit, make sure that the records are
+            only found for the car that is defined in the url.
+        """
+        return self.model.objects.filter(car=self.car)
+
+    def get_success_url(self):
+        """
+            Override the success url to go back to the car's detail page.
+        """
+        return self.object.get_absolute_url()
+
+    def get(self, request, *args, **kwargs):
+        """
+            Override get to add a car field to the class object.
+        """
+        self.car = get_object_or_404(Car,
+            slug=self.kwargs.get('car_slug', None),
+            owner=request.user)
+        return super(EditTripView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+            Override the post field to add a car field to the class object.
+        """
+        self.car = get_object_or_404(Car,
+            slug=self.kwargs.get('car_slug', None),
+            owner=request.user)
+        return super(EditTripView, self).post(request, *args, **kwargs)        
 
 
 class DisplayTripView(DetailView):
