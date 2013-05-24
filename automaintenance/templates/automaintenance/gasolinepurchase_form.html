@@ -8,7 +8,7 @@
 {% block content %}
 
 <div class="page-header">
-	<h1>{{ car }} <small>{% block report_type %}{{command}} Oil Change{%endblock%}</small></h1>
+	<h1>{{ car }} <small>{% block report_type %}{{command}} Gasoline Purchase{%endblock%}</small></h1>
 </div>
 
 <div class="row">
@@ -41,8 +41,6 @@
 				{% include "automaintenance/form_template.html" with field=form.fuel_amount %}
 				
 				{% include "automaintenance/form_template.html" with field=form.total_cost %}
-				
-				{% include "automaintenance/form_template.html" with field=form.tank_mileage %}
 				
 				{% include "automaintenance/form_template.html" with field=form.filled_tank %}
 
@@ -82,7 +80,7 @@
 		$(function() {
 			
 			$('#date_0_picker').datepicker();
-			$('#id_date_picker').timepicker({
+			$('#id_date_1').timepicker({
                 minuteStep: 1,
                 template: 'modal',
                 showSeconds: false,
