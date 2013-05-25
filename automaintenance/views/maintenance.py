@@ -54,11 +54,9 @@ class MaintenanceView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(MaintenanceView, self).get_context_data(**kwargs)
         
-        return_value = self.car.get_absolute_url()
+        context['back_object'] = self.car
         if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
-            return_value = self.request.session[MAINTENANCE_CRUD_BACK_KEY].get_absolute_url()
-            del self.request.session[MAINTENANCE_CRUD_BACK_KEY]
-        context['back_url'] = return_value
+            context['back_object']  = self.request.session[MAINTENANCE_CRUD_BACK_KEY]
         
         return context
 
@@ -91,6 +89,11 @@ class CreateMaintenanceView(CreateView):
         context = super(CreateView, self).get_context_data(**kwargs)
         context['command'] = 'Add'
         context['car'] = self.car
+        
+        context['back_object'] = self.car
+        if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
+            context['back_object']  = self.request.session[MAINTENANCE_CRUD_BACK_KEY]
+        
         return context
 
     def get_success_url(self):
@@ -100,7 +103,6 @@ class CreateMaintenanceView(CreateView):
         return_value = self.car.get_absolute_url()
         if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
             return_value = self.request.session[MAINTENANCE_CRUD_BACK_KEY].get_absolute_url()
-            del self.request.session[MAINTENANCE_CRUD_BACK_KEY]
         
         return return_value
 
@@ -161,6 +163,11 @@ class EditMaintenanceView(UpdateView):
         context = super(UpdateView, self).get_context_data(**kwargs)
         context['command'] = 'Update'
         context['car'] = self.car
+        
+        context['back_object'] = self.car
+        if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
+            context['back_object']  = self.request.session[MAINTENANCE_CRUD_BACK_KEY]
+        
         return context
 
     def get_queryset(self):
@@ -177,7 +184,6 @@ class EditMaintenanceView(UpdateView):
         return_value = self.car.get_absolute_url()
         if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
             return_value = self.request.session[MAINTENANCE_CRUD_BACK_KEY].get_absolute_url()
-            del self.request.session[MAINTENANCE_CRUD_BACK_KEY]
         
         return return_value
 
