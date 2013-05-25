@@ -25,7 +25,8 @@ from automaintenance.views.maintenance import EditGasolinePurchase, DeleteGasoli
 from automaintenance.views.maintenance import CreateMaintenanceView, CreateOilChange
 from automaintenance.views.maintenance import EditOilChange, DeleteOilChange
 from automaintenance.views.maintenance import GasolinePurchaseView, OilChangeView
-from automaintenance.views.trip import CreateTripView, DisplayTrip
+from automaintenance.views.trip import CreateTripView, DisplayTripView, EditTripView
+from automaintenance.views.trip import DeleteTripView
 from automaintenance.views.report import DistancePerUnitReport, CostPerDistanceReport
 from automaintenance.views.report import PricePerUnitReport
 
@@ -88,8 +89,14 @@ urlpatterns = patterns('',
         login_required(CreateTripView.as_view()),
         name="auto_maintenance_create_trip"),
     url(r'^car/(?P<car_slug>[^/]+)/trip/(?P<slug>[^/]+)/$',
-        login_required(DisplayTrip.as_view()),
+        login_required(DisplayTripView.as_view()),
         name='auto_maintenance_trip_view'),
+    url(r'^car/(?P<car_slug>[^/]+)/trip/(?P<slug>[^/]+)/edit/$',
+        login_required(EditTripView.as_view()),
+        name='auto_maintenance_edit_trip'),
+    url(r'^car/(?P<car_slug>[^/]+)/trip/(?P<slug>[^/]+)/delete/$',
+        login_required(DeleteTripView.as_view()),
+        name='auto_maintenance_delete_trip'),
                        
     # Reports
     url(r'^car/(?P<car_slug>[^/]+)/reports/mpg/$',

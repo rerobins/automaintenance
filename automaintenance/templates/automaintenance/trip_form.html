@@ -1,14 +1,67 @@
 {% extends "automaintenance/car_base.html" %}
 
+
+{% block extrahead %}
+<link href="http://rho.local/javascript/datepicker/css/datepicker.css" rel="stylesheet" media="screen">
+{% endblock %}
+
 {% block content %}
 
-  <h2>Add Trip to </h2>
+<div class="page-header">
+	<h1>{{ car }} <small>{% block report_type %}{{command}} Trip{%endblock%}</small></h1>
+</div>
 
-  <form method="post" action=".">
-    {% csrf_token %}
-    {{ form.as_p }}
+<div class="row">
+	<div class="span10 offset1">
+		<form method="post" action="." class="form-horizontal">
+			{% csrf_token %}
 
-    <input type="submit" value="Add">
-  </form>
+			{% include "automaintenance/form_template.html" with field=form.name %}
 
+			<fieldset>
+				<legend>
+					When
+				</legend>
+				
+				{% include "automaintenance/date_form_template.html" with field=form.start %}
+				
+				{% include "automaintenance/date_form_template.html" with field=form.end %}
+
+			</fieldset>
+
+			<fieldset>
+				<legend>
+					Optional
+				</legend>
+				
+				{% include "automaintenance/form_template.html" with field=form.description %}
+
+			</fieldset>
+			
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">
+					{{command}}
+				</button>
+				<a class="btn" href="{{ car.get_absolute_url }}">
+					Cancel
+				</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block extrascript %}
+	<script language="javascript" type="text/javascript" src="http://rho.local/javascript/datepicker/js/bootstrap-datepicker.js"></script>
+	
+	<script type="text/javascript">
+	
+		$(function() {
+			
+			$('#id_start_picker').datepicker();
+			$('#id_end_picker').datepicker();
+			
+		});
+	</script>
 {% endblock %}

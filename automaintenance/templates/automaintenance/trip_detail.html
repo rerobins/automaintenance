@@ -36,6 +36,11 @@
 			</dd>
 		</dl>
 	</div>
+	
+	<div class="span2 offset4">
+		<a class="btn" href="{% url 'auto_maintenance_edit_trip' trip.car.slug trip.slug %}">Edit</a>
+		<a class="btn btn-danger" href="{% url 'auto_maintenance_delete_trip' trip.car.slug trip.slug %}">Delete</a>
+	</div>
 </div>
   
 {% include "automaintenance/maintenance_list_include.html" %}
