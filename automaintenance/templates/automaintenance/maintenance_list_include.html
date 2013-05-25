@@ -1,4 +1,5 @@
 {% if maintenance_list %}
+
 <div class="page-header">
 	<h2>{{ type|default:"Maintenance" }} Records</h2>
 </div>
@@ -14,7 +15,9 @@
 	    			<th>Mileage</th>
 	    			<th>MPG</th>
 	    			<th>Cost</th>
+	    			{% if not hide_edit %}
 	    			<th>&nbsp;</th>
+	    			{% endif %}
 	    		</tr>
     		</thead>
     		<tbody>
@@ -25,11 +28,13 @@
     				<td>{{record.mileage}}</td>
     				<td>{% if record.tank_mileage %}{{ record.efficency|floatformat:3 }}{% endif %}</td>
     				<td>{{record.total_cost}}</td>
+    				{% if not hide_edit %}
     				<td>
     					<a class="btn btn-mini" href="{{ record.get_absolute_url }}" data-toggle="tooltip" title="View Record"><i class="icon-eye-open"></i></a>
 						<a class="btn btn-mini btn-info" href="{{ record.get_edit_url }}" data-toggle="tooltip" title="Edit Record"><i class="icon-edit icon-white"></i></a>
 						<a class="btn btn-mini btn-danger" href="{{ record.get_delete_url }}" data-toggle="tooltip" title="Delete Record"><i class="icon-remove icon-white"></i></a>
     				</td>
+    				{% endif %}
     			</tr>
     			{% endfor %}
     		</tbody>
