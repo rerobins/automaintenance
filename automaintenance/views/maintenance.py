@@ -57,6 +57,7 @@ class MaintenanceView(DetailView):
         context['back_object'] = self.car
         if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
             context['back_object']  = self.request.session[MAINTENANCE_CRUD_BACK_KEY]
+        context['car'] = self.car
         
         return context
 

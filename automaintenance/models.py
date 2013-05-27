@@ -38,11 +38,13 @@ MILEAGE_UNITS = (
                  (MILEAGE_UNITS_KILOMETERS, 'Kilometers')
                 )
 
-FUEL_UNITS_GALLONS = 'gal'
+FUEL_UNITS_US_GALLONS = 'us_gal'
+FUEL_UNITS_IMP_GALLONS = 'imp_gal'
 FUEL_UNITS_LITERS = 'l'
 
 FUEL_UNITS = (
-                (FUEL_UNITS_GALLONS, 'Gallons'),
+                (FUEL_UNITS_US_GALLONS, 'Gallons (US)'),
+                (FUEL_UNITS_IMP_GALLONS, 'Gallons (IMP)'),
                 (FUEL_UNITS_LITERS, 'Liters')
              )
 
@@ -80,12 +82,12 @@ class CarProfile(models.Model):
     car = models.ForeignKey(Car, related_name='+')
     mileage_units = models.CharField(max_length=2, choices=MILEAGE_UNITS, 
                                      default=MILEAGE_UNITS_MILES)
-    fuel_units = models.CharField(max_length=3, choices=FUEL_UNITS,
-                                  default=FUEL_UNITS_GALLONS)
+    fuel_units = models.CharField(max_length=10, choices=FUEL_UNITS,
+                                  default=FUEL_UNITS_US_GALLONS)
     city_rates = models.DecimalField(max_digits=5, decimal_places=2,
-                                    default=0.0)
+                                    default=24.0)
     highway_rates = models.DecimalField(max_digits=5, decimal_places=2,
-                                        default=0.0)
+                                        default=27.0)
 
 
 class Trip(models.Model):
