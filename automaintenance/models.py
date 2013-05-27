@@ -22,6 +22,7 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import date
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
 
 import pytz
 
@@ -48,15 +49,34 @@ FUEL_UNITS = (
                 (FUEL_UNITS_LITERS, 'Liters')
              )
 
+DEFAULT_CURRENCY = 'us_dollars'
+
+CURRENCY_UNITS = (
+                (DEFAULT_CURRENCY, '$'),
+                ('uk_pounds', mark_safe('&pound;')),
+                ('euros', mark_safe('&euro;')),
+                ('generic_currency', mark_safe('&curren;')),
+             )
+
 
 class Car(models.Model):
     """
         Car model that is the parent object for all of the maintenance records.
     """
     slug = models.SlugField()
-    car_type = models.CharField(max_length=50)
+    car_type = models.CharField(max_length=50, default="Unknown Type")
     name = models.CharField(max_length=50)
     owner = models.ForeignKey(User, related_name='+')
+    mileage_unit = models.CharField(max_length=2, choices=MILEAGE_UNITS, 
+                                     default=MILEAGE_UNITS_MILES)
+    fuel_unit = models.CharField(max_length=10, choices=FUEL_UNITS,
+                                  default=FUEL_UNITS_US_GALLONS)
+    city_rate = models.DecimalField(max_digits=5, decimal_places=2,
+                                    default=24.0)
+    highway_rate = models.DecimalField(max_digits=5, decimal_places=2,
+                                        default=27.0)
+    currency = models.CharField(max_length=20, choices=CURRENCY_UNITS,
+                                default=DEFAULT_CURRENCY)
 
     class Meta:
         ordering = ['name']
@@ -72,22 +92,7 @@ class Car(models.Model):
         """
             Override the absolute url for this object.
         """
-        return('auto_maintenance_car_detail', [str(self.slug)])
-
-
-class CarProfile(models.Model):
-    """
-        Additional information about cars.
-    """
-    car = models.ForeignKey(Car, related_name='+')
-    mileage_units = models.CharField(max_length=2, choices=MILEAGE_UNITS, 
-                                     default=MILEAGE_UNITS_MILES)
-    fuel_units = models.CharField(max_length=10, choices=FUEL_UNITS,
-                                  default=FUEL_UNITS_US_GALLONS)
-    city_rates = models.DecimalField(max_digits=5, decimal_places=2,
-                                    default=24.0)
-    highway_rates = models.DecimalField(max_digits=5, decimal_places=2,
-                                        default=27.0)
+        return('auto_maintenance_car_detail', [str(self.slug)])   
 
 
 class Trip(models.Model):

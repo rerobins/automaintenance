@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -56,6 +56,14 @@ class CreateCarView(CreateView):
         form.instance.owner = self.request.user
         form.instance.slug = slugify(form.instance.name)
         return super(CreateCarView, self).form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        """
+            Add the command type to the car view for display.
+        """
+        context = super(CreateCarView, self).get_context_data(**kwargs)
+        context['command'] = 'Add'
+        return context
 
     def get(self, request, *args, **kwargs):
         """
@@ -72,6 +80,44 @@ class CreateCarView(CreateView):
         """
         self.initial['owner'] = request.user
         return super(CreateCarView, self).post(request, *args, **kwargs)
+    
+
+class EditCarView(UpdateView):   
+    """
+        Override the update view to edit trip items on a specific car.
+    """
+    model = Car
+    form_class = CarForm
+
+    def form_valid(self, form):
+        """
+            Override the form_valid method to make sure that the car that the
+            record is defined for is stored in the object.
+        """
+        form.instance.owner = self.request.user
+        form.instance.slug = slugify(form.instance.name)
+        return super(EditCarView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        """
+            Add the command type to the car view for display.
+        """
+        context = super(EditCarView, self).get_context_data(**kwargs)
+        context['command'] = 'Edit'
+        return context
+
+    def get_queryset(self):
+        """
+            When looking up the object to edit, make sure that the records are
+            only found for the car that is defined in the url.
+        """
+        return self.model.objects.filter(owner=self.request.user)
+
+    def get_success_url(self):
+        """
+            Override the success url to go back to the car's detail page.
+        """
+        return self.object.get_absolute_url()        
 
 
 class DisplayCar(DetailView):

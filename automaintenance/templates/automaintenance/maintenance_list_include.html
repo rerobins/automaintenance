@@ -26,7 +26,7 @@
     				<td>{{record.date}}</td>
     				<td>{{record.human_readable_type}}</td>
     				<td>{{record.mileage}}</td>
-    				<td>{% if record.tank_mileage %}{{ record.efficency|floatformat:3 }}{% endif %}</td>
+    				<td>{{record.efficency|floatformat:3 }}</td>
     				<td>{{record.total_cost}}</td>
     				{% if not hide_edit %}
     				<td>

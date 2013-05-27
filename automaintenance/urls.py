@@ -18,7 +18,7 @@
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import url, patterns
 
-from automaintenance.views.car import CarListView, CreateCarView, DisplayCar
+from automaintenance.views.car import CarListView, CreateCarView, DisplayCar, EditCarView
 from automaintenance.views.maintenance import CreateGasolinePurchase, MaintenanceView
 from automaintenance.views.maintenance import EditMaintenanceView, DeleteMaintenanceView
 from automaintenance.views.maintenance import EditGasolinePurchase, DeleteGasolinePurchase
@@ -41,6 +41,9 @@ urlpatterns = patterns('',
     url(r'^car/(?P<slug>[^/]+)/$',
         login_required(DisplayCar.as_view()),
         name='auto_maintenance_car_detail'),
+    url(r'^car/(?P<slug>[^/]+)/edit/$',
+        login_required(EditCarView.as_view()),
+        name='auto_maintenance_edit_car'),
 
     # Gasoline Records
     url(r'^car/(?P<car_slug>[^/]+)/maintenance/gasoline/add/$',

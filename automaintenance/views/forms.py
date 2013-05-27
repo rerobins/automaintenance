@@ -51,15 +51,17 @@ class CarForm(ModelForm):
         """
         cleaned_data = self.cleaned_data
 
-        ## Make sure that there isn' already a project with the name requested
+        ## Make sure that there isn't already a project with the name requested
         ## owned by that user.
+        car = None
         try:
-            Car.objects.get(slug=slugify(cleaned_data['name']),
+            car = Car.objects.get(slug=slugify(cleaned_data['name']),
                 owner=self.initial['owner'])
         except:
             pass
         else:
-            raise ValidationError("Car with this name already exists")
+            if self.instance.pk and not car.pk == self.instance.pk:
+                raise ValidationError("Car with this name already exists")
 
         return cleaned_data
 
@@ -72,7 +74,13 @@ class CarForm(ModelForm):
         model = Car
 
         fields = ('car_type',
-                'name',)
+                'name',
+                'mileage_unit',
+                'fuel_unit',
+                'city_rate',
+                'highway_rate', 
+                'currency')
+
 
 
 class GasolinePurchaseForm(ModelForm):
