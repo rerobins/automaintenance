@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 from automaintenance.models import Car
+from django.conf import settings
 
 
 def car_list(request):
@@ -36,3 +37,17 @@ def car_list(request):
     return {
         'car_list': car_list,
     }
+
+def bootstrap(request):
+    return {
+        'bootstrap_css_url': settings.BOOTSTRAP_CSS_URL,
+        'bootstrap_js_url': settings.BOOTSTRAP_JS_URL,
+        'date_picker_css_url': settings.DATE_PICKER_CSS_URL,
+        'date_picker_js_url': settings.DATE_PICKER_JS_URL,
+        'time_picker_css_url': settings.TIME_PICKER_CSS_URL,
+        'time_picker_js_url': settings.TIME_PICKER_JS_URL,
+        'jquery_js_url': settings.JQUERY_JS_URL,
+        'flot_js_url': settings.FLOT_JS_URL,
+        'flot_time_js_url': settings.FLOT_TIME_JS_URL,
+    }
+    

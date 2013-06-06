@@ -2,7 +2,7 @@
 
 
 {% block extrahead %}
-<link href="http://rho.local/javascript/datepicker/css/datepicker.css" rel="stylesheet" media="screen">
+<link href="{{date_picker_css_url}}" rel="stylesheet" media="screen">
 {% endblock %}
 
 {% block content %}
@@ -53,7 +53,7 @@
 {% endblock %}
 
 {% block extrascript %}
-	<script language="javascript" type="text/javascript" src="http://rho.local/javascript/datepicker/js/bootstrap-datepicker.js"></script>
+	<script language="javascript" type="text/javascript" src="{{date_picker_js_url}}"></script>
 	
 	<script type="text/javascript">
 	
