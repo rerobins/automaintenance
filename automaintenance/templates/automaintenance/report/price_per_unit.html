@@ -4,7 +4,7 @@
 Price Per Gallon vs. Time
 {%endblock%}
 
-{% block data_javascript %}
+{% block time_based_data_set %}
 	{% for record in maintenance_list %}
 		[{{record.date|date:"U"}}000, {{record.efficency}} ], 	
 	{% endfor %}

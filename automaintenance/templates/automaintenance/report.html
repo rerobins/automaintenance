@@ -48,21 +48,26 @@
 	{% if maintenance_list %}
 		<script language="javascript" type="text/javascript" src="{{flot_js_url}}"></script>
 		<script language="javascript" type="text/javascript" src="{{flot_time_js_url}}"></script>
-	<script language="javascript" type="text/javascript" src="{{date_picker_js_url}}"></script>
+		<script language="javascript" type="text/javascript" src="{{date_picker_js_url}}"></script>
 		
 		<script type="text/javascript">
 		
 			$(function() {
 		
-				var d = [
+				var time_based_data_set = [
 				
-					{% block data_javascript %}
+					{% block time_based_data_set %}
 
 					{% endblock %}
 				
 				]; 
+				
+				{% block additional_data_sets %}
+				{% endblock %}
+				
+				var data_sets = [{% block data_sets %}{% endblock %}];
 		
-				$.plot("#placeholder", [d], {
+				$.plot("#placeholder", data_sets, {
 					lines: { show:true },
 					points: { show: true, fill: false },
 					xaxis: { mode: "time", timeformat: "%Y/%m/%d" }

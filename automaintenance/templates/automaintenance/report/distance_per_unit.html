@@ -4,9 +4,35 @@
 Miles Per Gallon vs. Time
 {%endblock%}
 
-{% block data_javascript %}
+{% block time_based_data_set %}
 	{% for record in maintenance_list %}
 		[{{record.date|date:"U"}}000, {{record.efficency}} ], 	
 	{% endfor %}
+{% endblock %}
+
+{% block additional_data_sets %}
+
+	{% if maintenance_list|length > 2 %}
+	
+		{% if car.city_rate %}
+		  var city_rate = [
+		  	[{{start_date|date:"U"}}000, {{car.city_rate}} ],
+		  	[{{end_date|date:"U"}}000, {{car.city_rate}} ], 	
+		  ];
+		{% endif %} 
+		
+		{% if car.highway_rate %}
+		  var highway_rate = [
+		  	[{{start_date|date:"U"}}000, {{car.highway_rate}} ],
+		  	[{{end_date|date:"U"}}000, {{car.highway_rate}} ], 	
+		  ];
+		{% endif %} 
+	
+	{% endif %}
+
+{% endblock %}
+
+{% block data_sets %}
+time_based_data_set, city_rate, highway_rate
 {% endblock %}
 					
