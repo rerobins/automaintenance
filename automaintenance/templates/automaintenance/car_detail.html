@@ -14,13 +14,13 @@
 				City Rate:
 			</dt>
 			<dd>
-				{{car.city_rate}}
+				{{car.city_rate}} {{car.get_distance_per_fuel}}
 			</dd>
 			<dt>
 				Highway Rate:
 			</dt>
 			<dd>
-				{{car.highway_rate}}
+				{{car.highway_rate}} {{car.get_distance_per_fuel}}
 			</dd>
 			<dt>
 				Last Oil Change:
@@ -44,8 +44,13 @@
 				<a href="#commands">Commands</a>
 			</li>
 			<li>
+				<a href="#maintenance">Maintenance</a>
+			</li>
+			{% if trip_list %}
+			<li>
 				<a href="#trips">Trips</a>
 			</li>
+			{% endif %}
 			<li>
 				<a href="#reports">Reports</a>
 			</li>
@@ -53,6 +58,16 @@
 
 		<div class="tab-content">
 			<div class="tab-pane active" id="commands">
+				<ul class="nav nav-tabs nav-stacked">
+					<li>
+						<a href="{% url 'auto_maintenance_create_trip' car.slug %}">Create Trip</a>
+					</li>
+					<li>
+						<a href="{% url 'auto_maintenance_edit_car' car.slug %}">Edit Car</a>
+					</li>
+				</ul>
+			</div>
+			<div class="tab-pane" id="maintenance">
 				<ul class="nav nav-tabs nav-stacked">
 					<li>
 						<a href="{% url 'auto_maintenance_create_gas_maintenance' car.slug %}">Add Gasoline Purchase</a>
@@ -63,14 +78,9 @@
 					<li>
 						<a href="{% url 'auto_maintenance_create_oil_change' car.slug %}">Add Oil Change</a>
 					</li>
-					<li>
-						<a href="{% url 'auto_maintenance_create_trip' car.slug %}">Create Trip</a>
-					</li>
-					<li>
-						<a href="{% url 'auto_maintenance_edit_car' car.slug %}">Edit Car</a>
-					</li>
 				</ul>
 			</div>
+			{% if trip_list %}
 			<div class="tab-pane" id="trips">
 				<ul class="nav nav-tabs nav-stacked">
 					{% for trip in trip_list %}
@@ -80,6 +90,7 @@
 					{% endfor %}
 				</ul>
 			</div>
+			{% endif %}
 			<div class="tab-pane" id="reports">
 				<ul class="nav nav-tabs nav-stacked">
 				{% include "automaintenance/report/report_list_include.html" %}

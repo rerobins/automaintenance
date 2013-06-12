@@ -12,8 +12,8 @@
 	    		<tr>
 	    			<th>Date</th>
 	    			<th>Type</th>
-	    			<th>Mileage</th>
-	    			<th>MPG</th>
+	    			<th>{{car.get_distance_table_header}}</th>
+	    			<th>{{car.get_distance_per_fuel}}</th>
 	    			<th>Cost</th>
 	    			{% if not hide_edit %}
 	    			<th>&nbsp;</th>
@@ -27,7 +27,7 @@
     				<td>{{record.human_readable_type}}</td>
     				<td>{{record.mileage}}</td>
     				<td>{{record.efficency|floatformat:3 }}</td>
-    				<td>{{record.total_cost}}</td>
+    				<td>{{car.get_currency_display}}{{record.total_cost|floatformat:2 }}</td>
     				{% if not hide_edit %}
     				<td>
     					<a class="btn btn-mini" href="{{ record.get_absolute_url }}" data-toggle="tooltip" title="View Record"><i class="icon-eye-open"></i></a>

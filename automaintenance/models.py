@@ -86,6 +86,29 @@ class Car(models.Model):
             Return the name of the object as the default print out.
         """
         return self.name
+    
+    def get_distance_table_header(self):
+        if self.mileage_unit == MILEAGE_UNITS_MILES:
+            return "Total Miles"
+        elif self.mileage_unit == MILEAGE_UNITS_KILOMETERS:
+            return "Total Km"
+        
+    def get_distance_per_fuel(self):
+        if self.mileage_unit == MILEAGE_UNITS_MILES:
+            if self.fuel_unit == FUEL_UNITS_US_GALLONS:
+                return "MPG"
+            elif self.fuel_unit == FUEL_UNITS_IMP_GALLONS:
+                return "MPG(Imp)"
+            elif self.fuel_unit == FUEL_UNITS_LITERS:
+                return "MPL"
+        elif self.mileage_unit == MILEAGE_UNITS_KILOMETERS:
+            if self.fuel_unit == FUEL_UNITS_LITERS:
+                return "KPL"
+            elif self.fuel_unit == FUEL_UNITS_US_GALLONS:
+                return "KPG"
+            elif self.fuel_unit == FUEL_UNITS_IMP_GALLONS:
+                return "KPG(Imp)"
+
 
     @permalink
     def get_absolute_url(self):
