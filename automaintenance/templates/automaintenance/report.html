@@ -45,19 +45,20 @@
 {% endblock %}
 
 {% block extrascript %}
-	{% if maintenance_list %}
-		<script type="text/javascript" src="{{flot_js_url}}"></script>
-		<script type="text/javascript" src="{{flot_time_js_url}}"></script>
-		<script type="text/javascript" src="{{date_picker_js_url}}"></script>
-		
-		<script type="text/javascript">
-		
-			$(function() {
-		
+	
+	<script type="text/javascript" src="{{flot_js_url}}"></script>
+	<script type="text/javascript" src="{{flot_time_js_url}}"></script>
+	<script type="text/javascript" src="{{date_picker_js_url}}"></script>
+	
+	<script type="text/javascript">
+	
+		$(function() {
+	
+			{% if maintenance_list %}
 				var time_based_data_set = [
 				
 					{% block time_based_data_set %}
-
+	
 					{% endblock %}
 				
 				]; 
@@ -72,10 +73,11 @@
 					points: { show: true, fill: false },
 					xaxis: { mode: "time", timeformat: "%Y/%m/%d" }
 				});
-				
-				$('#start_date_picker').datepicker();
-				$('#end_date_picker').datepicker();
-			});
-		</script>
-	{% endif %}
+			{% endif %}
+			
+			$('#start_date_picker').datepicker();
+			$('#end_date_picker').datepicker();
+		});
+	</script>
+
 {% endblock %}
