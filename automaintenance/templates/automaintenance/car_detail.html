@@ -23,6 +23,16 @@
 				{{car.highway_rate}} {{car.get_distance_per_fuel}}
 			</dd>
 			<dt>
+				Total Cost:
+			</dt>
+			<dd>
+				{{car.get_currency_display}}{{total_cost|default:0.0|floatformat:2}}
+			</dd>
+			<dt>Cost Year To Date:</dt>
+			<dd>
+				{{car.get_currency_display}}{{ytd_cost|default:0.0|floatformat:2}}
+			</dd>
+			<dt>
 				Last Oil Change:
 			</dt>
 			<dd>

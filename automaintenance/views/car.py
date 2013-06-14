@@ -22,9 +22,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.template.defaultfilters import slugify
 
 from automaintenance.models import Car, GasolinePurchase, OilChange
-from automaintenance.models import Maintenance, Trip
+from automaintenance.models import Trip
 from automaintenance.views.forms import CarForm
 from automaintenance.views import MAINTENANCE_CRUD_BACK_KEY
+from datetime import date
+
+from decimal import Decimal
 
 class CarListView(ListView):
     """
@@ -166,6 +169,21 @@ class DisplayCar(DetailView):
         # Populate the tirp list for this car
         context['trip_list'] = Trip.objects.filter(car=self.object)
         
+        # Calculate the total cost of maintaining the car
+        total_cost = Decimal(0.0)
+        ytd_cost = Decimal(0.0)
+        current_year = date.today().year
+        
+        for maintenance in context['maintenance_list']:
+            total_cost += maintenance.total_cost
+            if maintenance.date.year == current_year:
+                ytd_cost += maintenance.total_cost
+            
+        context['total_cost'] = total_cost
+        context['ytd_cost'] = ytd_cost
+        
         self.request.session[MAINTENANCE_CRUD_BACK_KEY] = self.object
+        
+        
 
         return context
