@@ -32,11 +32,10 @@ class ReportView(TemplateView):
     
     template_name = "automaintenance/report.html"
     
-    def get_context_data(self, **kwargs):
-        context = super(ReportView, self).get_context_data(**kwargs)
-        
-        car = Car.objects.get(owner=self.request.user, slug=kwargs['car_slug'])
-        
+    def convert_dates(self):
+        """
+            Converts the get parameters into date values.
+        """
         end_date = datetime.now()
         if 'end_date' in self.request.GET:  
             end_date_string = self.request.GET['end_date']             
@@ -47,15 +46,38 @@ class ReportView(TemplateView):
             start_date_string = self.request.GET['start_date']
             start_date = datetime.combine(parse_date(start_date_string), time(0))
         
-        start_date = make_aware(start_date, get_default_timezone())
-        end_date = make_aware(end_date, get_default_timezone())
+        self.start_date = make_aware(start_date, get_default_timezone())
+        self.end_date = make_aware(end_date, get_default_timezone())
         
-        records = GasolinePurchase.objects.filter(car=car).filter(date__gte=start_date).filter(date__lte=end_date)
+    def get_car(self, car_slug):
+        """
+            Get the car value based on the provided slug.
+        """
+        self.car = Car.objects.get(owner=self.request.user, slug=car_slug)
+        return self.car
         
-        context['maintenance_list'] = records 
-        context['start_date'] = start_date
-        context['end_date'] = end_date
-        context['car'] = car
+    def get_records(self):
+        """
+            Filter down the records for the car so that they 
+        """
+        self.records = self.car.maintenance_query(GasolinePurchase, self.start_date, self.end_date)
+        
+        return self.records
+    
+    def get_context_data(self, **kwargs):
+        """
+            Override the context data with the values.
+        """
+        context = super(ReportView, self).get_context_data(**kwargs)
+        
+        self.get_car(kwargs['car_slug'])
+        self.convert_dates()
+        self.get_records()
+        
+        context['maintenance_list'] = self.records 
+        context['start_date'] = self.start_date
+        context['end_date'] = self.end_date
+        context['car'] = self.car
         
         return context
     
@@ -80,3 +102,37 @@ class PricePerUnitReport(ReportView):
     """
     template_name = "automaintenance/report/price_per_unit.html"
     
+
+class CategoryReport(ReportView):
+    """
+        Report that will provide functionality to show how money is spent across the 
+        types of expenses.
+    """
+    template_name = "automaintenance/report/category_price.html"
+    
+    def get_records(self):
+        """
+            Filter down the records for the car so that they 
+        """
+        self.records = self.car.get_maintenance_list(self.start_date, self.end_date)
+        
+        return self.records
+    
+    def get_context_data(self, **kwargs):
+        """
+            Override the context data with the values.
+        """
+        context = super(CategoryReport, self).get_context_data(**kwargs)
+        
+        categories = {}
+        
+        for record in self.records:
+            if record.human_readable_type() not in categories:
+                categories[record.human_readable_type()] = record.total_cost
+            else:
+                categories[record.human_readable_type()] += record.total_cost
+                
+        context['categories'] = categories
+        
+        return context
+        

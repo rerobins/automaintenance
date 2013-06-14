@@ -1,8 +1,12 @@
 {% extends "automaintenance/car_base.html" %}
 
+{% load staticfiles %}
+
+DATE_PICKER_CSS_URL = '/static/css/datepicker.css'
+TIME_PICKER_CSS_URL = '/static/css/bootstrap-timepicker.min.css'
 {% block extrahead %}
-<link href="{{date_picker_css_url}}" rel="stylesheet" media="screen">
-<link href="{{time_picker_css_url}}" rel="stylesheet" media="screen">
+<link href="{% static "css/datepicker.css" %}" rel="stylesheet" media="screen">
+<link href="{% static "css/bootstrap-timepicker.min.css" %}" rel="stylesheet" media="screen">
 {% endblock %}
 
 {% block content %}
@@ -72,8 +76,8 @@
 {% endblock %}
 
 {% block extrascript %}
-	<script type="text/javascript" src="{{date_picker_js_url}}"></script>
-	<script type="text/javascript" src="{{time_picker_js_url}}"></script>
+	<script type="text/javascript" src="{% static "js/bootstrap-datepicker.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/bootstrap-timepicker.min.js" %}"></script>
 	
 	<script type="text/javascript">
 	

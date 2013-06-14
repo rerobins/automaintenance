@@ -145,12 +145,7 @@ class DisplayCar(DetailView):
         context = super(DetailView, self).get_context_data(**kwargs)
 
         # Populate the maintenance list for this car
-        gasoline_list = list(GasolinePurchase.objects.filter(car=self.object))
-        oilchange_list = list(OilChange.objects.filter(car=self.object))
-        maintenance_list = list(Maintenance.objects.filter(car=self.object))
-        maintenance_list = gasoline_list + oilchange_list + maintenance_list
-        maintenance_list.sort()
-        context['maintenance_list'] = maintenance_list
+        context['maintenance_list'] = self.object.get_maintenance_list()
 
         # Populate the last oil change for this car
         try:

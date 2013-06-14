@@ -1,0 +1,58 @@
+{% extends "automaintenance/report.html" %}
+
+{% block report_type %}
+Category vs. Price
+{%endblock%}
+
+{% block content %}
+
+<div class="page-header">
+	<h1>{{ car }} <small>Category vs. Price</small></h1>
+</div>
+
+<div class="row">
+	{% if maintenance_list %}
+	<div id="placeholder" class="span12" style="height: 300px">&nbsp;</div>
+	{% else %}
+	<div class="span12">
+		<h2 class="text-center">No Data</h2>
+	</div>
+	{% endif %}
+</div>
+
+<div class="row">
+
+	<div class="span10 offset1">
+		<form method="get" action="." class="form-inline text-center">
+			<div class="input-append date" id="start_date_picker" data-date="{{start_date|date:"Y-m-d"}}" data-date-format="yyyy-mm-dd">
+				<input class="input-small" type="text" value="{{start_date|date:"Y-m-d"}}" name="start_date" readonly>
+				<span class="add-on"><i class="icon-calendar"></i></span>
+			</div>
+			<i class="icon-arrow-right"></i>
+			<div class="input-append date" id="end_date_picker" data-date="{{end_date|date:"Y-m-d"}}" data-date-format="yyyy-mm-dd">
+				<input class="input-small" type="text" value="{{end_date|date:"Y-m-d"}}" name="end_date" readonly>
+				<span class="add-on"><i class="icon-calendar"></i></span>
+			</div>
+
+			<input type="submit" value="Update" class="btn btn-info">
+		</form>
+	</div>
+
+</div>
+
+<div class="row">
+	<div class="span12">
+		<table>
+			{% for key, value in categories.items %}
+    			<tr>
+    				<td>{{key}}</td>
+    				<td>{{value}}</td>
+    			</tr>
+			{% endfor %}
+		</table>
+	</div>
+</div>
+
+
+{% endblock %}
+					

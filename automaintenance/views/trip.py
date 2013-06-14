@@ -21,8 +21,7 @@ from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 from django.template.defaultfilters import slugify
 from django.shortcuts import get_object_or_404
 
-from automaintenance.models import Car, GasolinePurchase, OilChange
-from automaintenance.models import Maintenance, Trip
+from automaintenance.models import Car, Trip
 from automaintenance.views.forms import TripForm
 from automaintenance.views import MAINTENANCE_CRUD_BACK_KEY
 
@@ -163,11 +162,7 @@ class DisplayTripView(DetailView):
         """
         context = super(DisplayTripView, self).get_context_data(**kwargs)
 
-        gasoline_list = list(GasolinePurchase.objects.filter(trip=self.object))
-        oilchange_list = list(OilChange.objects.filter(trip=self.object))
-        maintenance_list = list(Maintenance.objects.filter(trip=self.object))
-
-        maintenance_list = gasoline_list + oilchange_list + maintenance_list
+        maintenance_list = self.object.car.get_maintenance_list(trip=self.object)
 
         maintenance_list.sort()
 

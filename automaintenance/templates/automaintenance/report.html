@@ -1,7 +1,9 @@
 {% extends "automaintenance/car_base.html" %}
 
+{% load staticfiles %}
+
 {% block extrahead %}
-<link href="{{date_picker_css_url}}" rel="stylesheet" media="screen">
+<link href="{% static "css/datepicker.css" %}" rel="stylesheet" media="screen">
 {% endblock %}
 
 {% block content %}
@@ -46,9 +48,9 @@
 
 {% block extrascript %}
 	
-	<script type="text/javascript" src="{{flot_js_url}}"></script>
-	<script type="text/javascript" src="{{flot_time_js_url}}"></script>
-	<script type="text/javascript" src="{{date_picker_js_url}}"></script>
+	<script type="text/javascript" src="{% static "js/jquery.flot.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/jquery.flot.time.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/bootstrap-datepicker.js" %}"></script>
 	
 	<script type="text/javascript">
 	

@@ -122,6 +122,37 @@ class Car(models.Model):
             Override the absolute url for this object.
         """
         return('auto_maintenance_car_detail', [str(self.slug)])   
+    
+    def get_maintenance_list(self, start_date=None, end_date=None, trip=None):
+        """
+            Returns a list of maintenance records for the car model provided.
+        """ 
+        # Populate the maintenance list for this car
+        gasoline = self.maintenance_query(GasolinePurchase, start_date=start_date, end_date=end_date, trip=trip)
+        
+        oilchange = self.maintenance_query(OilChange, start_date, end_date, trip)
+                
+        maintenance = self.maintenance_query(Maintenance, start_date, end_date, trip)
+        
+        maintenance_list = list(gasoline) + list(oilchange) + list(maintenance)
+        maintenance_list.sort()
+        
+        return maintenance_list
+    
+    def maintenance_query(self, object_type, start_date=None, end_date=None, trip=None):
+        """
+            Queries the maintenance records based on fields provided.
+        """
+        maintenance = object_type.objects.filter(car=self)
+        if start_date != None:
+            maintenance = maintenance.filter(date__gte=start_date)
+        if end_date != None:
+            maintenance = maintenance.filter(date__lte=end_date)
+        if trip != None:
+            maintenance = maintenance.filter(trip=trip)
+            
+        return maintenance
+        
 
 
 class Trip(models.Model):
