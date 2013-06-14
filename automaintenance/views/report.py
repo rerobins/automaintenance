@@ -104,6 +104,8 @@ class PricePerUnitReport(ReportView):
     
 
 class CategoryReport(ReportView):
+
+
     """
         Report that will provide functionality to show how money is spent across the 
         types of expenses.
@@ -136,3 +138,10 @@ class CategoryReport(ReportView):
         
         return context
         
+
+class DistancePerTime(ReportView):
+    """
+        Report that tracks the total mileage of a car and the miles that are entered per 
+        gasoline record.
+    """
+    template_name = "automaintenance/report/distance_per_time.html"

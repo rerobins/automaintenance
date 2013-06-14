@@ -1,0 +1,55 @@
+{% extends "automaintenance/report.html" %}
+
+{% load staticfiles %}
+
+{% block report_type %}
+Distance vs. Time
+{%endblock%}
+
+{% block extrascript %}
+	
+	<script type="text/javascript" src="{% static "js/jquery.flot.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/jquery.flot.time.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/bootstrap-datepicker.js" %}"></script>
+	
+	<script type="text/javascript">
+	
+		$(function() {
+	
+			{% if maintenance_list %}
+				var total_distance = [
+				
+				{% for record in maintenance_list %}
+					[{{record.date|date:"U"}}000, {{record.mileage}} ],
+				{%endfor%}
+				
+				]; 			
+
+				var tank_distance = [
+				{% for record in maintenance_list %}
+					[{{record.date|date:"U"}}000, {{record.tank_mileage}} ],
+				{%endfor%}
+				];
+				
+				var data_sets = [ { data: total_distance, 
+									label: "Total Mileage" },
+								  { data: tank_distance,
+								  	label: "Tank Mileage",
+								  	yaxis: 2,
+								  	bars: { show: true } }];
+		
+				$.plot("#placeholder", data_sets, {
+					points: { show: false, fill: false },
+					xaxis: { mode: "time", timeformat: "%Y/%m/%d" },
+					yaxis: [ {position: 'left'},
+							{ position: 'right',
+							alignTicksWithAxis: 1}]
+				});
+			{% endif %}
+			
+			$('#start_date_picker').datepicker();
+			$('#end_date_picker').datepicker();
+		});
+	</script>
+
+{% endblock %}
