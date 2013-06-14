@@ -88,12 +88,18 @@ class Car(models.Model):
         return self.name
     
     def get_distance_table_header(self):
+        """
+            Return a string that can be used for a mileage header.
+        """
         if self.mileage_unit == MILEAGE_UNITS_MILES:
             return "Total Miles"
         elif self.mileage_unit == MILEAGE_UNITS_KILOMETERS:
             return "Total Km"
         
     def get_distance_per_fuel(self):
+        """
+            Return a distance per fuel label.
+        """
         if self.mileage_unit == MILEAGE_UNITS_MILES:
             if self.fuel_unit == FUEL_UNITS_US_GALLONS:
                 return "MPG"
