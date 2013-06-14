@@ -26,13 +26,13 @@
 				Total Price:
 			</dt>
 			<dd>
-				{{total_price}}
+				{{car.get_currency_display}}{{total_price|default:0.0|floatformat:2}}
 			</dd>
 			<dt>
 				Total Mileage:
 			</dt>
 			<dd>
-				{{total_mileage}}
+				{{total_mileage|default:0.0}} {{car.get_mileage_unit_display|lower}}
 			</dd>
 		</dl>
 	</div>
