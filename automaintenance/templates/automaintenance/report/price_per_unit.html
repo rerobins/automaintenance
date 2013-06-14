@@ -6,7 +6,7 @@ Price Per Gallon vs. Time
 
 {% block time_based_data_set %}
 	{% for record in maintenance_list %}
-		[{{record.date|date:"U"}}000, {{record.efficency}} ], 	
+		[{{record.date|date:"U"}}000, {{record.price_per_unit}} ], 	
 	{% endfor %}
 {% endblock %}
 					

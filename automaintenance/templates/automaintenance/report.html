@@ -68,7 +68,7 @@
 				{% block additional_data_sets %}
 				{% endblock %}
 				
-				var data_sets = [{% block data_sets %}{% endblock %}];
+				var data_sets = [{% block data_sets %}time_based_data_set{% endblock %}];
 		
 				$.plot("#placeholder", data_sets, {
 					lines: { show:true },
