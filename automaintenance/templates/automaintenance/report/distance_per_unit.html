@@ -12,8 +12,6 @@ Miles Per Gallon vs. Time
 
 {% block additional_data_sets %}
 
-	{% if maintenance_list|length > 2 %}
-	
 		{% if car.city_rate %}
 		  var city_rate = [
 		  	[{{start_date|date:"U"}}000, {{car.city_rate}} ],
@@ -26,13 +24,13 @@ Miles Per Gallon vs. Time
 		  	[{{start_date|date:"U"}}000, {{car.highway_rate}} ],
 		  	[{{end_date|date:"U"}}000, {{car.highway_rate}} ], 	
 		  ];
-		{% endif %} 
-	
-	{% endif %}
+		{% endif %} 	
 
 {% endblock %}
 
 {% block data_sets %}
-time_based_data_set, city_rate, highway_rate
+time_based_data_set, 
+	{% if car.city_rate %} city_rate, {% endif %} 
+	{% if car.highway_rate %}highway_rate{%endif %}
 {% endblock %}
 					
