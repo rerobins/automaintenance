@@ -200,10 +200,10 @@ class MaintenanceBase(models.Model):
     car = models.ForeignKey(Car)
     trip = models.ForeignKey(Trip, null=True, blank=True)
     location = models.CharField(max_length=100, blank=True)
-    mileage = models.PositiveIntegerField()
+    mileage = models.PositiveIntegerField(default=0)
     description = models.TextField(blank=True)
     total_cost = models.DecimalField(max_digits=10, decimal_places=2,
-        blank=True)
+        blank=True, default=0.0)
 
     class Meta:
         """
@@ -268,9 +268,9 @@ class GasolinePurchase(MaintenanceBase):
         Gasoline purchase instance of a maintenance record.  Includes values
         for amount of gasoline, and price per unit.
     """
-    tank_mileage = models.DecimalField(max_digits=6, decimal_places=3)
-    price_per_unit = models.DecimalField(max_digits=6, decimal_places=3)
-    fuel_amount = models.DecimalField(max_digits=7, decimal_places=3)
+    tank_mileage = models.DecimalField(max_digits=6, decimal_places=3, default=0.0)
+    price_per_unit = models.DecimalField(max_digits=6, decimal_places=3, default=0.0)
+    fuel_amount = models.DecimalField(max_digits=7, decimal_places=3, default=0.0)
     filled_tank = models.BooleanField(default=True)
 
     def __unicode__(self):

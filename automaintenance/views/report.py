@@ -25,6 +25,7 @@ from django.utils.dateparse import parse_date
 
 from datetime import datetime, time, timedelta
 
+
 class ReportView(TemplateView):
     """
         Default report view.

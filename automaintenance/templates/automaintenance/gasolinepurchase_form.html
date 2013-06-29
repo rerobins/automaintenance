@@ -88,6 +88,24 @@
                 showSeconds: false,
                 showMeridian: false
             });
+
+		 	var calculateTotal = function() {
+				var ppg = Number($("#id_price_per_unit").val().replace(/[^0-9\.]+/g,""));
+		                if (isNaN(ppg)) { ppg = 0.0; }
+				$("#id_price_per_unit").val(ppg); 	
+		
+				var amount = Number($("#id_fuel_amount").val().replace(/[^0-9\.]+/g,""));
+		                if (isNaN(amount)) { amount = 0.0; }
+				$("#id_fuel_amount").val(amount); 	
+		
+		                var total = (amount * ppg).toFixed(2);
+				$("#id_total_cost").val(total);
+			};
+		
+	        $("#id_price_per_unit").blur(calculateTotal);
+	        $("#id_fuel_amount").blur(calculateTotal);
+	        $("#id_total_cost").focus(function() { $("#id_total_cost").blur() });
+
 		});
 	</script>
 {% endblock %}
