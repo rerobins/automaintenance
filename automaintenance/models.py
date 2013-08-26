@@ -58,6 +58,18 @@ CURRENCY_UNITS = (
                 ('generic_currency', mark_safe('&curren;')),
              )
 
+PAYMENT_TYPES = (
+    ('taxes', 'Taxes'),
+    ('association', 'Automobile Association'),
+    ('parking', 'Parking'),
+    ('fines', 'Fines'),
+    ('insurance', 'Insurance'),
+    ('loan', 'Loan Interest'),
+    ('other', 'Other')
+)
+
+DEFAULT_PAYMENT_TYPE = 'other'
+
 
 class Car(models.Model):
     """
@@ -396,3 +408,29 @@ class Payment(models.Model):
     description = models.TextField(blank=True)
     total_cost = models.DecimalField(max_digits=10, decimal_places=2,
                                  blank=True, default=0.0)
+    type = models.CharField(max_length=11, choices=MILEAGE_UNITS,
+                            default=DEFAULT_PAYMENT_TYPE)
+
+    def get_absolute_url(self):
+        """
+            Absolute URL for the detailed record.
+        """
+        return reverse('auto_maintenance_view_payment',
+                       kwargs={'car_slug': self.car.slug,
+                               'pk': self.pk})
+
+    def get_edit_url(self):
+        """
+            Define a url object for editing gasoline records.
+        """
+        return reverse('auto_maintenance_edit_payment',
+                       kwargs={'car_slug': self.car.slug,
+                               'pk': self.pk})
+
+    def get_delete_url(self):
+        """
+            Define a url object for deleting gasoline records.
+        """
+        return reverse('auto_maintenance_delete_payment',
+                       kwargs={'car_slug': self.car.slug,
+                               'pk': self.pk})

@@ -29,6 +29,7 @@ from automaintenance.views.trip import CreateTripView, DisplayTripView, EditTrip
 from automaintenance.views.trip import DeleteTripView
 from automaintenance.views.report import DistancePerUnitReport, CostPerDistanceReport
 from automaintenance.views.report import PricePerUnitReport, CategoryReport, DistancePerTime
+from automaintenance.views.payments import PaymentView, CreatePaymentView, DeletePaymentView, EditPaymentView
 
 urlpatterns = patterns('',
     url(r'^$', login_required(CarListView.as_view()),
@@ -86,6 +87,20 @@ urlpatterns = patterns('',
     url(r'^car/(?P<car_slug>[^/]+)/oilchange/(?P<pk>\d+)/$',
         login_required(OilChangeView.as_view()),
         name='auto_oilchange_view_record'),
+
+    # Oil Change Records
+    url(r'^car/(?P<car_slug>[^/]+)/payment/add/$',
+        login_required(CreatePaymentView.as_view()),
+        name='auto_maintenance_create_payment'),
+    url(r'^car/(?P<car_slug>[^/]+)/payment/(?P<pk>\d+)/edit/$',
+        login_required(EditPaymentView.as_view()),
+        name='auto_maintenance_edit_payment'),
+    url(r'^car/(?P<car_slug>[^/]+)/payment/(?P<pk>\d+)/delete/$',
+        login_required(DeletePaymentView.as_view()),
+        name='auto_maintenance_delete_payment'),
+    url(r'^car/(?P<car_slug>[^/]+)/payment/(?P<pk>\d+)/$',
+        login_required(PaymentView.as_view()),
+        name='auto_oilchange_view_payment'),
 
     # Trip Records
     url(r'^car/(?P<car_slug>[^/]+)/trip/add/$',
