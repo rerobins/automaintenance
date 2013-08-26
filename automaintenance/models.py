@@ -378,3 +378,21 @@ class Maintenance(MaintenanceBase):
             Returns a human readable type information for this object type.
         """
         return self.type
+
+
+class Payment(models.Model):
+    """
+        Collection of other payments that can be associated with a car
+        purchase.  These can be taxes, parking, automobile associations,
+        fines, tickets. Basically anything that doesn't have a mileage
+        associated with it.
+    """
+    date = models.DateTimeField(unique=True)
+    date_timezone = models.CharField(max_length=50, choices=timezone_choices,
+                                 default=settings.TIME_ZONE)
+    car = models.ForeignKey(Car)
+    trip = models.ForeignKey(Trip, null=True, blank=True)
+    location = models.CharField(max_length=100, blank=True)
+    description = models.TextField(blank=True)
+    total_cost = models.DecimalField(max_digits=10, decimal_places=2,
+                                 blank=True, default=0.0)

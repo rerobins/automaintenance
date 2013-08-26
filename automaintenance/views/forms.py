@@ -20,7 +20,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from automaintenance.models import Car, GasolinePurchase, OilChange
-from automaintenance.models import Maintenance, Trip
+from automaintenance.models import Maintenance, Trip, Payment
 from django.forms.util import ErrorList
 
 
@@ -28,13 +28,14 @@ class SpanErrorList(ErrorList):
     """
         Error list that overrides how errors are printed out in the forms.
     """
-    
+
     def __unicode__(self):
         return self.as_divs()
-    
+
     def as_divs(self):
         if not self: return u''
-        return u'<span class="help-block">%s</div>' % ''.join([u'<span class="help-block">%s</span>' % e for e in self])
+        return u'<span class="help-block">%s</div>' % ''.join(
+            [u'<span class="help-block">%s</span>' % e for e in self])
 
 
 class CarForm(ModelForm):
@@ -56,7 +57,7 @@ class CarForm(ModelForm):
         car = None
         try:
             car = Car.objects.get(slug=slugify(cleaned_data['name']),
-                owner=self.initial['owner'])
+                                  owner=self.initial['owner'])
         except:
             pass
         else:
@@ -74,13 +75,12 @@ class CarForm(ModelForm):
         model = Car
 
         fields = ('car_type',
-                'name',
-                'mileage_unit',
-                'fuel_unit',
-                'city_rate',
-                'highway_rate', 
-                'currency')
-
+                  'name',
+                  'mileage_unit',
+                  'fuel_unit',
+                  'city_rate',
+                  'highway_rate',
+                  'currency')
 
 
 class GasolinePurchaseForm(ModelForm):
@@ -97,15 +97,15 @@ class GasolinePurchaseForm(ModelForm):
         model = GasolinePurchase
 
         fields = ('date',
-                'location',
-                'mileage',
-                'description',
-                'total_cost',
-                'tank_mileage',
-                'price_per_unit',
-                'fuel_amount', 
-                'trip',
-                'filled_tank')
+                  'location',
+                  'mileage',
+                  'description',
+                  'total_cost',
+                  'tank_mileage',
+                  'price_per_unit',
+                  'fuel_amount',
+                  'trip',
+                  'filled_tank')
         widgets = {
             'date': forms.SplitDateTimeWidget(),
         }
@@ -125,12 +125,12 @@ class OilChangeForm(ModelForm):
         model = OilChange
 
         fields = ('date',
-                'location',
-                'mileage',
-                'description',
-                'total_cost',
-                'trip',
-                )
+                  'location',
+                  'mileage',
+                  'description',
+                  'total_cost',
+                  'trip',
+        )
         widgets = {
             'date': forms.SplitDateTimeWidget(),
         }
@@ -141,12 +141,12 @@ class MaintenanceForm(ModelForm):
         Form that will allow for a scheduled maintenance or any other
         maintenance to be added to the specified car.
     """
-    
+
     def __init__(self, *args, **kwargs):
         kwargs_new = {'error_class': SpanErrorList}
         kwargs_new.update(kwargs)
         super(MaintenanceForm, self).__init__(*args, **kwargs_new)
-    
+
 
     class Meta:
         """
@@ -156,13 +156,13 @@ class MaintenanceForm(ModelForm):
         model = Maintenance
 
         fields = ('date',
-                'location',
-                'mileage',
-                'type',
-                'description',
-                'total_cost',
-                'trip',
-                )
+                  'location',
+                  'mileage',
+                  'type',
+                  'description',
+                  'total_cost',
+                  'trip',
+        )
         widgets = {
             'date': forms.SplitDateTimeWidget(),
         }
@@ -186,7 +186,7 @@ class TripForm(ModelForm):
         ## owned by that user.
         try:
             Trip.objects.get(slug=slugify(cleaned_data['name']),
-                car=self.initial['car'])
+                             car=self.initial['car'])
         except:
             pass
         else:
@@ -202,3 +202,28 @@ class TripForm(ModelForm):
         model = Trip
 
         fields = ('name', 'description', 'start', 'end')
+
+
+class PaymentForm(ModelForm):
+    """
+        Form that will allow for a payment to be added to a car.
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs_new = {'error_class': SpanErrorList}
+        kwargs_new.update(kwargs)
+        super(PaymentForm, self).__init__(*args, **kwargs_new)
+
+    class Meta:
+        """
+            Define the meta data and the fields that are to be showed in this
+            form.
+        """
+        model = Payment
+
+        fields = ('date',
+                  'location',
+                  'type',
+                  'description',
+                  'total_cost',
+                  'trip',)

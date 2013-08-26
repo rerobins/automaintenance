@@ -29,6 +29,7 @@ from datetime import date
 
 from decimal import Decimal
 
+
 class CarListView(ListView):
     """
         Return the list of cars that are owned by the user that is posting the
@@ -161,8 +162,7 @@ class DisplayCar(DetailView):
         # Populate the last fill up for this car
         try:
             context['has_last_gas_purchase'] = True
-            context['last_gas_purchase'] = GasolinePurchase.objects.filter(
-                    car=self.object).latest()
+            context['last_gas_purchase'] = GasolinePurchase.objects.filter(car=self.object).latest()
         except ObjectDoesNotExist:
             context['has_last_gas_purchase'] = False
 
@@ -183,7 +183,5 @@ class DisplayCar(DetailView):
         context['ytd_cost'] = ytd_cost
         
         self.request.session[MAINTENANCE_CRUD_BACK_KEY] = self.object
-        
-        
 
         return context

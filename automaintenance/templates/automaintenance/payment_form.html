@@ -1,0 +1,29 @@
+{% extends "automaintenance/car_base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+	<h1>{{ car }} <small>{% block report_type %}{{command}} Payment{%endblock%}</small></h1>
+</div>
+
+<div class="row">
+	<div class="span10 offset1">
+		<form method="post" action="." class="form-horizontal">
+			{% csrf_token %}
+
+			{{ form.as_p }}
+			
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">
+					{{command}}
+				</button>
+				<a class="btn" href="{{ back_object.get_absolute_url }}">
+					Cancel
+				</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}
+

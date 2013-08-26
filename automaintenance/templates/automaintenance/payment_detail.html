@@ -1,0 +1,37 @@
+{% extends "automaintenance/car_base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+	<h1>{{record.human_readable_type}}<small>{{record.date}}</small></h1>
+</div>
+
+<div class="row">
+	<div class="span6">
+	  
+	  <dl class="dl-horizontal">
+	      <dt>Car:</dt>
+     	  <dd>{{payment.car.name}}</dd>
+     	  
+     	  <dt>Location:</dt>
+     	  <dd>{{payment.location}}</dd>
+
+          <dt>Cost</dt>
+          <dd>{{payment.total_cost}}</dd>
+     	  
+     	  
+	  </dl>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+	  <p>
+	  	<a class="btn" href="{{ back_object.get_absolute_url }}">Back</a>
+	  	<a class="btn btn-info" href="{{ record.get_edit_url }}">Edit</a> 
+	  	<a class="btn btn-danger" href="{{ record.get_delete_url }}">Delete</a>
+	  </p>
+  </div>
+</div>
+
+{% endblock %}
