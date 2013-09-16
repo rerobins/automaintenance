@@ -65,10 +65,26 @@ PAYMENT_TYPES = (
     ('fines', 'Fines'),
     ('insurance', 'Insurance'),
     ('loan', 'Loan Interest'),
+    ('carwash', 'Car Wash'),
     ('other', 'Other')
 )
 
 DEFAULT_PAYMENT_TYPE = 'other'
+
+
+def date_sorting(first, second):
+    """
+            Basic comparison function for all records that will sort based on
+            the date values.
+        """
+    return_value = 0
+
+    if first.date < second.date:
+        return_value = -1
+    elif first.date > second.date:
+        return_value = 1
+
+    return return_value
 
 
 class Car(models.Model):
@@ -80,13 +96,13 @@ class Car(models.Model):
     name = models.CharField(max_length=50)
     owner = models.ForeignKey(User, related_name='+')
     mileage_unit = models.CharField(max_length=2, choices=MILEAGE_UNITS, 
-                                     default=MILEAGE_UNITS_MILES)
+                                    default=MILEAGE_UNITS_MILES)
     fuel_unit = models.CharField(max_length=10, choices=FUEL_UNITS,
-                                  default=FUEL_UNITS_US_GALLONS)
+                                 default=FUEL_UNITS_US_GALLONS)
     city_rate = models.DecimalField(max_digits=5, decimal_places=2,
                                     default=24.0)
     highway_rate = models.DecimalField(max_digits=5, decimal_places=2,
-                                        default=27.0)
+                                       default=27.0)
     currency = models.CharField(max_length=20, choices=CURRENCY_UNITS,
                                 default=DEFAULT_CURRENCY)
 
@@ -145,10 +161,12 @@ class Car(models.Model):
         oilchange = self.maintenance_query(OilChange, start_date, end_date, trip)
                 
         maintenance = self.maintenance_query(Maintenance, start_date, end_date, trip)
+
+        payment = self.maintenance_query(Payment, start_date, end_date, trip)
         
-        maintenance_list = list(gasoline) + list(oilchange) + list(maintenance)
-        maintenance_list.sort()
-        
+        maintenance_list = list(gasoline) + list(oilchange) + list(maintenance) + list(payment)
+        maintenance_list = sorted(maintenance_list, cmp=date_sorting)
+
         return maintenance_list
     
     def maintenance_query(self, object_type, start_date=None, end_date=None, trip=None):
@@ -156,16 +174,15 @@ class Car(models.Model):
             Queries the maintenance records based on fields provided.
         """
         maintenance = object_type.objects.filter(car=self)
-        if start_date != None:
+        if start_date is not None:
             maintenance = maintenance.filter(date__gte=start_date)
-        if end_date != None:
+        if end_date is not None:
             maintenance = maintenance.filter(date__lte=end_date)
-        if trip != None:
+        if trip is not None:
             maintenance = maintenance.filter(trip=trip)
             
         return maintenance
         
-
 
 class Trip(models.Model):
     """
@@ -273,7 +290,6 @@ class MaintenanceBase(models.Model):
             kwargs={'car_slug': self.car.slug,
                     'pk': self.pk})
             
-    
 
 class GasolinePurchase(MaintenanceBase):
     """
@@ -308,24 +324,24 @@ class GasolinePurchase(MaintenanceBase):
             Absolute URL for the detailed record.
         """
         return reverse('auto_gasolinepurchase_view_record',
-            kwargs={'car_slug': self.car.slug,
-                    'pk': self.pk})  
+                       kwargs={'car_slug': self.car.slug,
+                               'pk': self.pk})
     
     def get_edit_url(self):
         """
             Define a url object for editing gasoline records.
         """
         return reverse('auto_maintenance_edit_gas_maintenance',
-            kwargs={'car_slug': self.car.slug,
-                    'pk': self.pk})
+                       kwargs={'car_slug': self.car.slug,
+                               'pk': self.pk})
     
     def get_delete_url(self):
         """
             Define a url object for deleting gasoline records. 
         """
         return reverse('auto_maintenance_delete_gas_maintenance',
-            kwargs={'car_slug': self.car.slug,
-                    'pk': self.pk})
+                       kwargs={'car_slug': self.car.slug,
+                               'pk': self.pk})
 
 
 class OilChange(MaintenanceBase):
@@ -339,24 +355,24 @@ class OilChange(MaintenanceBase):
             Absolute URL for the detailed record.
         """
         return reverse('auto_oilchange_view_record',
-            kwargs={'car_slug': self.car.slug,
-                    'pk': self.pk})  
+                       kwargs={'car_slug': self.car.slug,
+                               'pk': self.pk})
     
     def get_edit_url(self):
         """
             Define a url object for editing gasoline records.
         """
         return reverse('auto_maintenance_edit_oil_change',
-            kwargs={'car_slug': self.car.slug,
-                    'pk': self.pk})
+                       kwargs={'car_slug': self.car.slug,
+                               'pk': self.pk})
     
     def get_delete_url(self):
         """
             Define a url object for deleting gasoline records. 
         """
         return reverse('auto_maintenance_delete_oil_change',
-            kwargs={'car_slug': self.car.slug,
-                    'pk': self.pk})
+                       kwargs={'car_slug': self.car.slug,
+                               'pk': self.pk})
 
     def __unicode__(self):
         """
@@ -408,7 +424,7 @@ class Payment(models.Model):
     description = models.TextField(blank=True)
     total_cost = models.DecimalField(max_digits=10, decimal_places=2,
                                  blank=True, default=0.0)
-    type = models.CharField(max_length=11, choices=MILEAGE_UNITS,
+    type = models.CharField(max_length=11, choices=PAYMENT_TYPES,
                             default=DEFAULT_PAYMENT_TYPE)
 
     def get_absolute_url(self):

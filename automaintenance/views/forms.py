@@ -227,3 +227,4 @@ class PaymentForm(ModelForm):
                   'description',
                   'total_cost',
                   'trip',)
+

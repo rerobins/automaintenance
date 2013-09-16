@@ -151,6 +151,7 @@ class DisplayCar(DetailView):
 
         # Populate the maintenance list for this car
         context['maintenance_list'] = self.object.get_maintenance_list()
+        context['payment_list'] = self.object.payment_set.all()
 
         # Populate the last oil change for this car
         try:
@@ -179,7 +180,7 @@ class DisplayCar(DetailView):
             total_cost += maintenance.total_cost
             if maintenance.date.year == current_year:
                 ytd_cost += maintenance.total_cost
-            
+
         context['total_cost'] = total_cost
         context['ytd_cost'] = ytd_cost
         

@@ -88,6 +88,9 @@
 					<li>
 						<a href="{% url 'auto_maintenance_create_oil_change' car.slug %}">Add Oil Change</a>
 					</li>
+                    <li>
+                        <a href="{% url 'auto_maintenance_create_payment' car.slug %}">Add Payment</a>
+                    </li>
 				</ul>
 			</div>
 			{% if trip_list %}
