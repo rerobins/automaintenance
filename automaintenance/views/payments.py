@@ -111,7 +111,8 @@ class CreatePaymentView(CreateView):
         self.car = get_object_or_404(Car,
                                      slug=self.kwargs.get('car_slug', None),
                                      owner=request.user)
-        self.initial['date'] = datetime.datetime.utcnow().replace(tzinfo=utc)
+        print "Calling Create Payment View"
+        #self.initial['date'] = datetime.datetime.utcnow().replace(tzinfo=utc)
 
         return super(CreatePaymentView, self).get(request, *args, **kwargs)
 
@@ -158,7 +159,7 @@ class EditPaymentView(UpdateView):
         """
             Add the command type to the maintenance view for display.
         """
-        context = super(UpdateView, self).get_context_data(**kwargs)
+        context = super(EditPaymentView, self).get_context_data(**kwargs)
         context['command'] = 'Update'
         context['car'] = self.car
 

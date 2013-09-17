@@ -1,29 +1,86 @@
 {% extends "automaintenance/car_base.html" %}
 
+{% load staticfiles %}
+
+{% block extrahead %}
+    <link href="{% static "css/datepicker.css" %}" rel="stylesheet" media="screen">
+    <link href="{% static "css/bootstrap-timepicker.min.css" %}" rel="stylesheet" media="screen">
+{% endblock %}
+
 {% block content %}
 
-<div class="page-header">
-	<h1>{{ car }} <small>{% block report_type %}{{command}} Payment{%endblock%}</small></h1>
-</div>
+    <div class="page-header">
+        <h1>{{ car }} <small>{% block report_type %}{{command}} Scheduled Maintenance{%endblock%}</small></h1>
+    </div>
 
-<div class="row">
-	<div class="span10 offset1">
-		<form method="post" action="." class="form-horizontal">
-			{% csrf_token %}
+    <div class="row">
+        <div class="span10 offset1">
+            <form method="post" action="." class="form-horizontal">
+                {% csrf_token %}
 
-			{{ form.as_p }}
-			
-			<div class="form-actions">
-				<button type="submit" class="btn btn-primary">
-					{{command}}
-				</button>
-				<a class="btn" href="{{ back_object.get_absolute_url }}">
-					Cancel
-				</a>
-			</div>
-		</form>
-	</div>
-</div>
+                <fieldset>
+                    <legend>
+                        Location and Time
+                    </legend>
 
+                    {% include "automaintenance/date_time_form_template.html" with field=form.date %}
+
+                    {% include "automaintenance/form_template.html" with field=form.location %}
+
+                </fieldset>
+
+                <fieldset>
+                    <legend>
+                        Details
+                    </legend>
+
+                    {% include "automaintenance/form_template.html" with field=form.type %}
+
+                    {% include "automaintenance/form_template.html" with field=form.total_cost %}
+
+                </fieldset>
+
+                <fieldset>
+                    <legend>
+                        Other
+                    </legend>
+
+                    {% include "automaintenance/form_template.html" with field=form.description %}
+
+                    {% include "automaintenance/form_template.html" with field=form.trip %}
+
+                </fieldset>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        {{command}}
+                    </button>
+                    <a class="btn" href="{{ back_object.get_absolute_url }}">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extrascript %}
+    <script type="text/javascript" src="{% static "js/bootstrap-datepicker.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/bootstrap-timepicker.min.js" %}"></script>
+
+    <script type="text/javascript">
+
+        $(function() {
+
+            $('#date_0_picker').datepicker();
+            $('#id_date_1').timepicker({
+                minuteStep: 1,
+                template: 'modal',
+                showSeconds: false,
+                showMeridian: false
+            });
+        });
+    </script>
 {% endblock %}
 

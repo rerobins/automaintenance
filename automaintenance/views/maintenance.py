@@ -114,7 +114,7 @@ class CreateMaintenanceView(CreateView):
         self.car = get_object_or_404(Car,
             slug=self.kwargs.get('car_slug', None),
             owner=request.user)
-        self.initial['date'] = datetime.datetime.utcnow().replace(tzinfo=utc)
+        #self.initial['date'] = datetime.datetime.utcnow().replace(tzinfo=utc)
 
         return super(CreateView, self).get(request, *args, **kwargs)
 

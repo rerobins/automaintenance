@@ -417,13 +417,13 @@ class Payment(models.Model):
     """
     date = models.DateTimeField(unique=True)
     date_timezone = models.CharField(max_length=50, choices=timezone_choices,
-                                 default=settings.TIME_ZONE)
+                                     default=settings.TIME_ZONE)
     car = models.ForeignKey(Car)
     trip = models.ForeignKey(Trip, null=True, blank=True)
     location = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
     total_cost = models.DecimalField(max_digits=10, decimal_places=2,
-                                 blank=True, default=0.0)
+                                     blank=True, default=0.0)
     type = models.CharField(max_length=11, choices=PAYMENT_TYPES,
                             default=DEFAULT_PAYMENT_TYPE)
 
@@ -450,3 +450,9 @@ class Payment(models.Model):
         return reverse('auto_maintenance_delete_payment',
                        kwargs={'car_slug': self.car.slug,
                                'pk': self.pk})
+
+    def human_readable_type(self):
+        """
+            Returns a human readable type information for this object type.
+        """
+        return self.get_type_display()
