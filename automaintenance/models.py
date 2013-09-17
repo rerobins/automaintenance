@@ -26,6 +26,8 @@ from django.utils.safestring import mark_safe
 
 import pytz
 
+from datetime import datetime
+
 
 # Time zone choices for all of the record date time values.
 timezone_choices = [(time_zone, time_zone)
@@ -223,7 +225,7 @@ class MaintenanceBase(models.Model):
         Maintenance root object that contains date, car, location, mileage, and
         cost fields for any of the maintenance record values.
     """
-    date = models.DateTimeField(unique=True)
+    date = models.DateTimeField(unique=True, default=datetime.now)
     date_timezone = models.CharField(max_length=50, choices=timezone_choices, 
                                      default=settings.TIME_ZONE)
     car = models.ForeignKey(Car)
@@ -415,7 +417,7 @@ class Payment(models.Model):
         fines, tickets. Basically anything that doesn't have a mileage
         associated with it.
     """
-    date = models.DateTimeField(unique=True)
+    date = models.DateTimeField(unique=True, default=datetime.now)
     date_timezone = models.CharField(max_length=50, choices=timezone_choices,
                                      default=settings.TIME_ZONE)
     car = models.ForeignKey(Car)
