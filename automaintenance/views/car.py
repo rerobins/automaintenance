@@ -29,6 +29,7 @@ from automaintenance.views import MAINTENANCE_CRUD_BACK_KEY
 from datetime import date
 
 from decimal import Decimal
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class CarListView(ListView):
@@ -43,7 +44,14 @@ class CarListView(ListView):
         """
             Trim down the query result automatically by the owner of the car.
         """
-        return Car.objects.filter(owner=self.request.user)
+
+        if self.queryset is None:
+            self.queryset = Car.objects.filter(owner=self.request.user)
+
+        return self.queryset
+
+    def get(self, request, *args, **kwargs):
+        return super(CarListView, self).get(request, *args, **kwargs)
 
 
 class CreateCarView(CreateView):
@@ -150,14 +158,12 @@ class DisplayCar(DetailView):
         context = super(DetailView, self).get_context_data(**kwargs)
 
         # Populate the maintenance list for this car
-        context['maintenance_list'] = self.object.get_maintenance_list()
-        context['payment_list'] = self.object.payment_set.all()
+        maintenance_list = self.object.get_maintenance_list()
 
         # Populate the last oil change for this car
         try:
             context['has_last_oil_change'] = True
-            context['last_oil_change'] = OilChange.objects.filter(
-                    car=self.object).latest()
+            context['last_oil_change'] = OilChange.objects.filter(car=self.object).latest()
         except ObjectDoesNotExist:
             context['has_last_oil_change'] = False
 
@@ -174,16 +180,34 @@ class DisplayCar(DetailView):
         # Calculate the total cost of maintaining the car
         total_cost = Decimal(0.0)
         ytd_cost = Decimal(0.0)
+        ytd_mileage = Decimal(0.0)
         current_year = date.today().year
         
-        for maintenance in context['maintenance_list']:
+        for maintenance in maintenance_list:
             total_cost += maintenance.total_cost
             if maintenance.date.year == current_year:
                 ytd_cost += maintenance.total_cost
 
+            if hasattr(maintenance, 'tank_mileage'):
+                ytd_mileage += maintenance.tank_mileage
+
         context['total_cost'] = total_cost
         context['ytd_cost'] = ytd_cost
+        context['ytd_mileage'] = ytd_mileage
+        context['ytd_cost_per_mile'] = ytd_cost / ytd_mileage
         
         self.request.session[MAINTENANCE_CRUD_BACK_KEY] = self.object
+
+        paginator = Paginator(maintenance_list, 10) # Show 10 records per page
+
+        page = self.request.GET.get('page')
+        try:
+            context['maintenance_list'] = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            context['maintenance_list'] = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            context['maintenance_list'] = paginator.page(paginator.num_pages)
 
         return context

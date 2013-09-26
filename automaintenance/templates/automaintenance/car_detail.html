@@ -32,6 +32,16 @@
 			<dd>
 				{{car.get_currency_display}}{{ytd_cost|default:0.0|floatformat:2}}
 			</dd>
+            <dt>Mileage Year to Date:</dt>
+            <dd>
+                {{ ytd_mileage|default:0.0|floatformat:1 }}
+            </dd>
+            <dt>
+                YTD Cost per Mile:
+            </dt>
+            <dd>
+                {{ car.get_currency_display }}{{ ytd_cost_per_mile|default:0.0|floatformat:3 }}
+            </dd>
 			<dt>
 				Last Oil Change:
 			</dt>
@@ -51,9 +61,6 @@
 
 		<ul class="nav nav-tabs" id="myTab">
 			<li class="active">
-				<a href="#commands">Commands</a>
-			</li>
-			<li>
 				<a href="#maintenance">Maintenance</a>
 			</li>
 			{% if trip_list %}
@@ -64,10 +71,13 @@
 			<li>
 				<a href="#reports">Reports</a>
 			</li>
+            <li>
+                <a href="#commands">Commands</a>
+            </li>
 		</ul>
 
 		<div class="tab-content">
-			<div class="tab-pane active" id="commands">
+			<div class="tab-pane" id="commands">
 				<ul class="nav nav-tabs nav-stacked">
 					<li>
 						<a href="{% url 'auto_maintenance_create_trip' car.slug %}">Create Trip</a>
@@ -77,7 +87,7 @@
 					</li>
 				</ul>
 			</div>
-			<div class="tab-pane" id="maintenance">
+			<div class="tab-pane active" id="maintenance">
 				<ul class="nav nav-tabs nav-stacked">
 					<li>
 						<a href="{% url 'auto_maintenance_create_gas_maintenance' car.slug %}">Add Gasoline Purchase</a>

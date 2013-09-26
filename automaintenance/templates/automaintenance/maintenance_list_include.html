@@ -41,6 +41,26 @@
     	</table>
 
     </div>
+
+    {% if maintenance_list.paginator %}
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if maintenance_list.has_previous %}
+                <a href="?page={{ maintenance_list.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ maintenance_list.number }} of {{ maintenance_list.paginator.num_pages }}.
+            </span>
+
+            {% if maintenance_list.has_next %}
+                <a href="?page={{ maintenance_list.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
+    {% endif %}
     
 </div>
 {% endif %}

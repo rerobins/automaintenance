@@ -74,7 +74,7 @@ PAYMENT_TYPES = (
 DEFAULT_PAYMENT_TYPE = 'other'
 
 
-def date_sorting(first, second):
+def earliest_first(first, second):
     """
             Basic comparison function for all records that will sort based on
             the date values.
@@ -85,6 +85,20 @@ def date_sorting(first, second):
         return_value = -1
     elif first.date > second.date:
         return_value = 1
+
+    return return_value
+
+def latest_first(first, second):
+    """
+            Basic comparison function for all records that will sort based on
+            the date values.
+        """
+    return_value = 0
+
+    if first.date < second.date:
+        return_value = 1
+    elif first.date > second.date:
+        return_value = -1
 
     return return_value
 
@@ -167,7 +181,7 @@ class Car(models.Model):
         payment = self.maintenance_query(Payment, start_date, end_date, trip)
         
         maintenance_list = list(gasoline) + list(oilchange) + list(maintenance) + list(payment)
-        maintenance_list = sorted(maintenance_list, cmp=date_sorting)
+        maintenance_list = sorted(maintenance_list, cmp=latest_first)
 
         return maintenance_list
     
