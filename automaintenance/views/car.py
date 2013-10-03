@@ -188,8 +188,8 @@ class DisplayCar(DetailView):
             if maintenance.date.year == current_year:
                 ytd_cost += maintenance.total_cost
 
-            if hasattr(maintenance, 'tank_mileage'):
-                ytd_mileage += maintenance.tank_mileage
+                if hasattr(maintenance, 'tank_mileage'):
+                    ytd_mileage += maintenance.tank_mileage
 
         context['total_cost'] = total_cost
         context['ytd_cost'] = ytd_cost
