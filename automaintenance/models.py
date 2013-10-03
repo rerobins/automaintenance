@@ -88,6 +88,7 @@ def earliest_first(first, second):
 
     return return_value
 
+
 def latest_first(first, second):
     """
             Basic comparison function for all records that will sort based on
