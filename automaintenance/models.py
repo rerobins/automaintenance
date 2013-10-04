@@ -54,11 +54,10 @@ FUEL_UNITS = (
 DEFAULT_CURRENCY = 'us_dollars'
 
 CURRENCY_UNITS = (
-                (DEFAULT_CURRENCY, '$'),
-                ('uk_pounds', mark_safe('&pound;')),
-                ('euros', mark_safe('&euro;')),
-                ('generic_currency', mark_safe('&curren;')),
-             )
+                 (DEFAULT_CURRENCY, '$'),
+                 ('uk_pounds', mark_safe('&pound;')),
+                 ('euros', mark_safe('&euro;')),
+                 ('generic_currency', mark_safe('&curren;')),)
 
 PAYMENT_TYPES = (
     ('taxes', 'Taxes'),
@@ -68,6 +67,7 @@ PAYMENT_TYPES = (
     ('insurance', 'Insurance'),
     ('loan', 'Loan Interest'),
     ('carwash', 'Car Wash'),
+    ('toll', 'Tolls'),
     ('other', 'Other')
 )
 
