@@ -194,7 +194,8 @@ class DisplayCar(DetailView):
         context['total_cost'] = total_cost
         context['ytd_cost'] = ytd_cost
         context['ytd_mileage'] = ytd_mileage
-        context['ytd_cost_per_mile'] = ytd_cost / ytd_mileage
+        if ytd_mileage > 0.0:
+            context['ytd_cost_per_mile'] = ytd_cost / ytd_mileage
         
         self.request.session[MAINTENANCE_CRUD_BACK_KEY] = self.object
 
