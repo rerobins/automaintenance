@@ -31,33 +31,28 @@ from datetime import datetime
 
 # Time zone choices for all of the record date time values.
 timezone_choices = [(time_zone, time_zone)
-    for time_zone in pytz.common_timezones]
+                    for time_zone in pytz.common_timezones]
 
 MILEAGE_UNITS_MILES = 'mi'
 MILEAGE_UNITS_KILOMETERS = 'km'    
     
-MILEAGE_UNITS = (
-                 (MILEAGE_UNITS_MILES, 'Miles'),
-                 (MILEAGE_UNITS_KILOMETERS, 'Kilometers')
-                )
+MILEAGE_UNITS = ((MILEAGE_UNITS_MILES, 'Miles'),
+                 (MILEAGE_UNITS_KILOMETERS, 'Kilometers'),)
 
 FUEL_UNITS_US_GALLONS = 'us_gal'
 FUEL_UNITS_IMP_GALLONS = 'imp_gal'
 FUEL_UNITS_LITERS = 'l'
 
-FUEL_UNITS = (
-                (FUEL_UNITS_US_GALLONS, 'Gallons (US)'),
-                (FUEL_UNITS_IMP_GALLONS, 'Gallons (IMP)'),
-                (FUEL_UNITS_LITERS, 'Liters')
-             )
+FUEL_UNITS = ((FUEL_UNITS_US_GALLONS, 'Gallons (US)'),
+              (FUEL_UNITS_IMP_GALLONS, 'Gallons (IMP)'),
+              (FUEL_UNITS_LITERS, 'Liters'),)
 
 DEFAULT_CURRENCY = 'us_dollars'
 
-CURRENCY_UNITS = (
-                 (DEFAULT_CURRENCY, '$'),
-                 ('uk_pounds', mark_safe('&pound;')),
-                 ('euros', mark_safe('&euro;')),
-                 ('generic_currency', mark_safe('&curren;')),)
+CURRENCY_UNITS = ((DEFAULT_CURRENCY, '$'),
+                  ('uk_pounds', mark_safe('&pound;')),
+                  ('euros', mark_safe('&euro;')),
+                  ('generic_currency', mark_safe('&curren;')),)
 
 PAYMENT_TYPES = (
     ('taxes', 'Taxes'),
@@ -160,33 +155,38 @@ class Car(models.Model):
             elif self.fuel_unit == FUEL_UNITS_IMP_GALLONS:
                 return "KPG(Imp)"
 
-
     @permalink
     def get_absolute_url(self):
         """
             Override the absolute url for this object.
         """
-        return('auto_maintenance_car_detail', [str(self.slug)])   
+        return 'auto_maintenance_car_detail', [str(self.slug)]
     
     def get_maintenance_list(self, start_date=None, end_date=None, trip=None):
         """
             Returns a list of maintenance records for the car model provided.
         """ 
         # Populate the maintenance list for this car
-        gasoline = self.maintenance_query(GasolinePurchase, start_date=start_date, end_date=end_date, trip=trip)
+        gasoline = self.maintenance_query(GasolinePurchase,
+                                          start_date=start_date,
+                                          end_date=end_date, trip=trip)
         
-        oilchange = self.maintenance_query(OilChange, start_date, end_date, trip)
+        oilchange = self.maintenance_query(OilChange, start_date, end_date,
+                                           trip)
                 
-        maintenance = self.maintenance_query(Maintenance, start_date, end_date, trip)
+        maintenance = self.maintenance_query(Maintenance, start_date, end_date,
+                                             trip)
 
         payment = self.maintenance_query(Payment, start_date, end_date, trip)
         
-        maintenance_list = list(gasoline) + list(oilchange) + list(maintenance) + list(payment)
+        maintenance_list = list(gasoline) + list(oilchange) + \
+            list(maintenance) + list(payment)
         maintenance_list = sorted(maintenance_list, cmp=latest_first)
 
         return maintenance_list
     
-    def maintenance_query(self, object_type, start_date=None, end_date=None, trip=None):
+    def maintenance_query(self, object_type, start_date=None, end_date=None,
+                          trip=None):
         """
             Queries the maintenance records based on fields provided.
         """
@@ -232,7 +232,7 @@ class Trip(models.Model):
             Override the url for the trip detail view.
         """
         return('auto_maintenance_trip_view', [str(self.car.slug),
-            str(self.slug)])
+               str(self.slug)])
 
 
 class MaintenanceBase(models.Model):
@@ -249,7 +249,7 @@ class MaintenanceBase(models.Model):
     mileage = models.PositiveIntegerField(default=0)
     description = models.TextField(blank=True)
     total_cost = models.DecimalField(max_digits=10, decimal_places=2,
-        blank=True, default=0.0)
+                                     blank=True, default=0.0)
 
     class Meta:
         """
@@ -288,24 +288,21 @@ class MaintenanceBase(models.Model):
             Override the url object for this record.
         """
         return reverse('auto_maintenance_view_record',
-            kwargs={'car_slug': self.car.slug,
-                    'pk': self.pk})        
+                       kwargs={'car_slug': self.car.slug, 'pk': self.pk})
         
     def get_edit_url(self):
         """
             Define a url object for editing maintenance records.
         """
         return reverse('auto_maintenance_edit_scheduled_maintenance',
-            kwargs={'car_slug': self.car.slug,
-                    'pk': self.pk})
+                       kwargs={'car_slug': self.car.slug, 'pk': self.pk})
     
     def get_delete_url(self):
         """
             Define a url object for deleting maintenance records. 
         """
         return reverse('auto_maintenance_delete_scheduled_maintenance',
-            kwargs={'car_slug': self.car.slug,
-                    'pk': self.pk})
+                       kwargs={'car_slug': self.car.slug, 'pk': self.pk})
             
 
 class GasolinePurchase(MaintenanceBase):
@@ -313,9 +310,12 @@ class GasolinePurchase(MaintenanceBase):
         Gasoline purchase instance of a maintenance record.  Includes values
         for amount of gasoline, and price per unit.
     """
-    tank_mileage = models.DecimalField(max_digits=6, decimal_places=3, default=0.0)
-    price_per_unit = models.DecimalField(max_digits=6, decimal_places=3, default=0.0)
-    fuel_amount = models.DecimalField(max_digits=7, decimal_places=3, default=0.0)
+    tank_mileage = models.DecimalField(max_digits=6, decimal_places=3,
+                                       default=0.0)
+    price_per_unit = models.DecimalField(max_digits=6, decimal_places=3,
+                                         default=0.0)
+    fuel_amount = models.DecimalField(max_digits=7, decimal_places=3,
+                                      default=0.0)
     filled_tank = models.BooleanField(default=True)
 
     def __unicode__(self):
