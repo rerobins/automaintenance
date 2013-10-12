@@ -61,7 +61,7 @@ class CarForm(ModelForm):
         except:
             pass
         else:
-            if self.instance.pk and not car.pk == self.instance.pk:
+            if self.instance.pk is None and not car.pk == self.instance.pk:
                 raise ValidationError("Car with this name already exists")
 
         return cleaned_data
@@ -184,13 +184,15 @@ class TripForm(ModelForm):
 
         ## Make sure that there isn't already a project with the name requested
         ## owned by that user.
+        trip = None
         try:
-            Trip.objects.get(slug=slugify(cleaned_data['name']),
-                             car=self.initial['car'])
+            trip = Trip.objects.get(slug=slugify(cleaned_data['name']),
+                                    car=self.initial['car'])
         except:
             pass
         else:
-            raise ValidationError("Car with this name already exists")
+            if self.instance.pk is None and not trip.pk == self.instance.pk:
+                raise ValidationError("Car with this name already exists")
 
         return cleaned_data
 
