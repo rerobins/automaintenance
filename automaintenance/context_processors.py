@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 from automaintenance.models import Car
-from django.conf import settings
 
 
 def car_list(request):
