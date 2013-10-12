@@ -26,9 +26,6 @@ from automaintenance.models import Trip, Payment
 from automaintenance.views.forms import PaymentForm
 from automaintenance.views import MAINTENANCE_CRUD_BACK_KEY
 
-import datetime
-from django.utils.timezone import utc
-
 
 class PaymentView(DetailView):
     """
@@ -53,7 +50,7 @@ class PaymentView(DetailView):
 
         context['back_object'] = self.car
         if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
-            context['back_object']  = self.request.session[MAINTENANCE_CRUD_BACK_KEY]
+            context['back_object'] = self.request.session[MAINTENANCE_CRUD_BACK_KEY]
         context['car'] = self.car
 
         return context
@@ -111,7 +108,6 @@ class CreatePaymentView(CreateView):
         self.car = get_object_or_404(Car,
                                      slug=self.kwargs.get('car_slug', None),
                                      owner=request.user)
-        #self.initial['date'] = datetime.datetime.utcnow().replace(tzinfo=utc)
 
         return super(CreatePaymentView, self).get(request, *args, **kwargs)
 
@@ -127,7 +123,7 @@ class CreatePaymentView(CreateView):
 
     def get_form(self, form_class):
         """
-            Returns an instance of the form to be used in this view.  Overriden
+            Returns an instance of the form to be used in this view.  Overridden
             to limit the trips that are going to be used to the ones that
             are allowed in the currently edited car.
         """
@@ -226,7 +222,7 @@ class DeletePaymentView(DeleteView):
 
         context['back_object'] = self.car
         if MAINTENANCE_CRUD_BACK_KEY in self.request.session:
-            context['back_object']  = self.request.session[MAINTENANCE_CRUD_BACK_KEY]
+            context['back_object'] = self.request.session[MAINTENANCE_CRUD_BACK_KEY]
 
         context['car'] = self.car
 
