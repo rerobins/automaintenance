@@ -36,4 +36,3 @@ def car_list(request):
     return {
         'car_list': car_list,
     }
-    

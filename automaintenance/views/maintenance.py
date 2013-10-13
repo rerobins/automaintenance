@@ -33,6 +33,7 @@ from django.utils.timezone import utc
 
 from decimal import Decimal
 
+
 class MaintenanceView(DetailView):
     """
         Base view for the maintenance record display.
